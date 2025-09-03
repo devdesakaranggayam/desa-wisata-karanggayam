@@ -16,6 +16,11 @@
                 <label class="form-label">No HP</label>
                 <input type="text" name="no_hp" class="form-control" required>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Alamat</label>
+                <textarea type="text" name="alamat" class="form-control" required></textarea>
+            </div>
     
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="{{ route('toko.index') }}" class="btn btn-secondary">Batal</a>

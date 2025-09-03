@@ -15,6 +15,7 @@
                         <th>ID</th>
                         <th>Nama</th>
                         <th>No HP</th>
+                        <th>Alamat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -24,6 +25,7 @@
                         <td>{{ $row->id }}</td>
                         <td>{{ $row->nama }}</td>
                         <td>{{ $row->no_hp }}</td>
+                        <td>{{ $row->alamat }}</td>
                         <td>
                             <a href="{{ route('toko.edit', $row->id) }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
                             <form action="{{ route('toko.destroy', $row->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?')">

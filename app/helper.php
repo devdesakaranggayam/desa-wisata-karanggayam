@@ -166,3 +166,15 @@ if (!function_exists('get_daterange')) {
         ];
     }
 }
+
+if (! function_exists('user')) {
+    function user() {
+        return auth('web')->user();
+    }
+}
+
+if (! function_exists('admin')) {
+    function admin() {
+        return auth('admin')->user();
+    }
+}

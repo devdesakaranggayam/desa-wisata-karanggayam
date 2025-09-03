@@ -17,6 +17,9 @@
   
   <meta name="description" content="" />
 
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}" />
 
@@ -59,7 +62,6 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.min.css" integrity="sha256-h2Gkn+H33lnKlQTNntQyLXMWq7/9XI2rlPCsLsVcUBs=" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
-
   
   <style>
     .pointer {

@@ -4,17 +4,27 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KesenianController;
+use App\Http\Controllers\AdminAuthController;
 
-Route::get('/', function () {
-    return view('dashboard.kesenian.index');
+Route::get('admin', function () {
+    return redirect()->route('kesenian.index');
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login.form');
+    Route::post('login', [AdminAuthController::class, 'login'])->name('login');
 
-Route::resource('kesenian', KesenianController::class);
-Route::delete('/kesenian/{kesenian}/file/{file}', [KesenianController::class, 'removeFile'])->name('kesenian.removeFile');
+    Route::middleware('auth:admin')->group(function () {
+        Route::resource('kesenian', KesenianController::class);
+        Route::delete('kesenian/{kesenian}/file/{file}', [KesenianController::class, 'removeFile'])->name('kesenian.removeFile');
+        
+        Route::resource('toko', TokoController::class);
+        
+        Route::resource('produk', ProdukController::class);
+        Route::delete('produk/{produk}/file/{file}', [ProdukController::class, 'removeFile'])->name('produk.removeFile');
 
-Route::resource('toko', TokoController::class);
+        Route::get('logout', [AdminAuthController::class, 'logout'])->name('logout');
+    });
+});
 
-Route::resource('produk', ProdukController::class);
-Route::delete('/produk/{produk}/file/{file}', [ProdukController::class, 'removeFile'])->name('produk.removeFile');
 

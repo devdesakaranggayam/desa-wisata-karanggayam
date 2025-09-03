@@ -23,6 +23,7 @@ class TokoController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string',
         ]);
 
         Toko::create($request->only(['nama', 'no_hp']));
@@ -40,9 +41,10 @@ class TokoController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
+            'alamat' => 'required|string',
         ]);
 
-        $toko->update($request->only(['nama', 'no_hp']));
+        $toko->update($request->only(['nama', 'no_hp', 'alamat']));
 
         return redirect()->route('toko.index')->with('success', 'Toko berhasil diperbarui.');
     }
