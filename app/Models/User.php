@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +22,8 @@ class User extends Authenticatable implements JWTSubject
         'nama',
         'email',
         'password',
-        'nomor_hp'
+        'nomor_hp',
+        'profile_pic'
     ];
 
     /**
@@ -57,5 +58,19 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    
+    // accessor untuk profile_pic_url
+    protected $appends = ['profile_pic_url'];
+    public function getProfilePicUrlAttribute()
+    {
+        if (!$this->profile_pic) {
+            return null;
+        }
+
+        // Ambil base URL dari APP_URL .env
+        $baseUrl = config('app.url');
+
+        return $baseUrl . Storage::url($this->profile_pic);
     }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\TokoController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ProdukController;
 use App\Http\Controllers\API\KesenianController;
 
@@ -30,5 +31,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('profile', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
+    });
+
+    Route::prefix('akun')->group(function () {
+        Route::post('update-password', [UserController::class, 'updatePassword']);
+        Route::post('update-profile', [UserController::class, 'updateProfile']);
+        Route::post('update-profile-picture', [UserController::class, 'updateProfilePicture']);
     });
 });
