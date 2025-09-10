@@ -40,28 +40,27 @@ class AuthController extends Controller
         return ApiResponse::success([
             'user'  => Auth::guard('api')->user(),
             'token' => $token,
-        ], "Login berhasil");
+        ], "Login berhasil", 200);
     }
 
     public function me()
     {
-        return ApiResponse::success(Auth::guard('api')->user(), "Profile user");
+        return ApiResponse::success(Auth::guard('api')->user(), "Profile user", 200);
     }
 
     public function logout()
     {
         Auth::guard('api')->logout();
-        return ApiResponse::success([], "Logout berhasil");
+        return ApiResponse::success([], "Logout berhasil", 200);
     }
 
     public function refresh()
     {
         return ApiResponse::success([
             'token' => Auth::guard('api')->refresh(),
-        ], "Token berhasil diperbarui");
+        ], "Token berhasil diperbarui", 200);
     }
 
-    
     public function requestReset(Request $request)
     {
         $request->validate([
@@ -69,7 +68,6 @@ class AuthController extends Controller
         ]);
 
         $otp = rand(10000, 99999); // 5 digit
-
         $hashedOtp = Hash::make($otp);
 
         PasswordReset::updateOrCreate(
@@ -83,7 +81,7 @@ class AuthController extends Controller
             $message->subject('Kode Reset Password Anda');
         });
 
-        return response()->json(['message' => 'Kode OTP telah dikirim ke email Anda.']);
+        return ApiResponse::success([], 'Kode OTP telah dikirim ke email Anda.', 200);
     }
 
     public function verifyOtp(Request $request)
@@ -96,14 +94,16 @@ class AuthController extends Controller
         $reset = PasswordReset::where('email', $request->email)->first();
 
         if (!$reset || !Hash::check($request->otp, $reset->otp)) {
-            return response()->json(['message' => 'OTP salah atau tidak ditemukan'], 400);
+            return ApiResponse::error('OTP salah atau tidak ditemukan.', 400);
         }
 
         // Token sementara
         $token = Str::random(60);
         cache()->put("password_reset_token_{$request->email}", $token, now()->addMinutes(15));
 
-        return response()->json(['token' => $token]);
+        return ApiResponse::success([
+            'token' => $token
+        ], 'OTP valid.', 200);
     }
 
     public function resetPassword(Request $request)
@@ -117,10 +117,15 @@ class AuthController extends Controller
         $cachedToken = cache()->get("password_reset_token_{$request->email}");
 
         if (!$cachedToken || $cachedToken !== $request->token) {
-            return response()->json(['message' => 'Token tidak valid atau sudah kedaluwarsa'], 400);
+            return ApiResponse::error('Token tidak valid atau sudah kedaluwarsa.', 400);
         }
 
         $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return ApiResponse::error('User tidak ditemukan.', 404);
+        }
+
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -128,7 +133,6 @@ class AuthController extends Controller
         cache()->forget("password_reset_token_{$request->email}");
         PasswordReset::where('email', $request->email)->delete();
 
-        return response()->json(['message' => 'Password berhasil direset']);
+        return ApiResponse::success([], 'Password berhasil direset.', 200);
     }
-
 }
