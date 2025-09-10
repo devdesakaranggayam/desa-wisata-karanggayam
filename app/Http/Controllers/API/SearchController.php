@@ -21,6 +21,7 @@ class SearchController extends Controller
         // Cari di Produk
         $produk = Produk::where('nama', 'like', '%' . $query . '%')
             ->orWhere('deskripsi', 'like', '%' . $query . '%')
+            ->with(['files','toko'])
             ->get()
             ->map(function ($item) {
                 return [
@@ -32,6 +33,7 @@ class SearchController extends Controller
         // Cari di Kesenian
         $kesenian = Kesenian::where('nama', 'like', '%' . $query . '%')
             ->orWhere('deskripsi', 'like', '%' . $query . '%')
+            ->with(['files'])
             ->get()
             ->map(function ($item) {
                 return [
