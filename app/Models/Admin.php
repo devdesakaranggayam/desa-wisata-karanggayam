@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +20,7 @@ class Admin extends Authenticatable implements JWTSubject
     protected $fillable = [
         'nama',
         'email',
+        'username',
         'password',
         'nomor_hp'
     ];

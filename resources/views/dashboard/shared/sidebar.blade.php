@@ -57,5 +57,50 @@
                 <div data-i18n="Toko">Toko</div>
             </a>
         </li>
+
+        <li class="menu-item
+            {{is_active_sidebar([
+                'pengguna.index',
+                'pengguna.create',
+                'pengguna.edit',
+                'pengguna.show',
+                'admin.index',
+                'admin.create',
+                'admin.edit',
+                'admin.show'
+            ])}}"
+        >
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Pengguna">Akun</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item
+                    {{is_active_sidebar([
+                        'admin.index',
+                        'admin.create',
+                        'admin.edit',
+                        'admin.show'
+                    ])}}"
+                >
+                    <a href="{{route('admin.index')}}" class="menu-link">
+                        <div data-i18n="Without menu">Admin</div>
+                    </a>
+                </li>
+                <li class="menu-item
+                    {{is_active_sidebar([
+                        'pengguna.index',
+                        'pengguna.create',
+                        'pengguna.edit',
+                        'pengguna.show'
+                    ])}}"
+                >
+                    <a href="{{route('pengguna.index')}}" class="menu-link">
+                        <div data-i18n="Without menu">Pengguna</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
 </aside>
