@@ -14,16 +14,26 @@ class AdminAuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $loginField = $request->input('email');
+        $password   = $request->input('password');
+
+        // cek apakah input berupa email atau username
+        $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $credentials = [
+            $fieldType => $loginField,
+            'password' => $password,
+        ];
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('kesenian.index'));
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            'email' => 'Email/Username atau password salah.',
         ]);
+
     }
 
     public function logout(Request $request)

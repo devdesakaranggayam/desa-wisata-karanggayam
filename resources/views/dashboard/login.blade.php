@@ -16,9 +16,9 @@
 
             {{-- Email --}}
             <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
+                <label for="email" class="form-label">Email atau Username</label>
                 <input 
-                    type="email" 
+                    type="text" 
                     class="form-control @error('email') is-invalid @enderror" 
                     id="email" 
                     name="email" 
