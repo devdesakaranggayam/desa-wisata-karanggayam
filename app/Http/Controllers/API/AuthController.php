@@ -31,10 +31,24 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('nomor_hp', 'password');
+        $request->validate([
+            'nomor_hp'    => 'required|string', // bisa email atau nomor hp
+            'password' => 'required|string',
+        ]);
+
+        $loginInput = $request->input('nomor_hp');
+        $password   = $request->input('password');
+
+        // Deteksi login pakai email atau nomor hp
+        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'nomor_hp';
+
+        $credentials = [
+            $fieldType => $loginInput,
+            'password' => $password,
+        ];
 
         if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return ApiResponse::error("Nomor hp atau password salah", 401);
+            return ApiResponse::error("Nomor HP / Email atau password salah", 401);
         }
 
         return ApiResponse::success([
@@ -42,6 +56,7 @@ class AuthController extends Controller
             'token' => $token,
         ], "Login berhasil", 200);
     }
+
 
     public function me()
     {
