@@ -12,6 +12,17 @@
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1 mt-3">
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'dashboard'
+            ])}}"
+        >
+            <a href="{{route('kesenian.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-home"></i>
+
+                <div data-i18n="Kesenian">Dashboard</div>
+            </a>
+        </li>
         <!-- Kesenian -->
         <li class="menu-item 
             {{is_active_sidebar([
