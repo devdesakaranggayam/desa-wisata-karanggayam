@@ -17,7 +17,7 @@
                 'dashboard'
             ])}}"
         >
-            <a href="{{route('kesenian.index')}}" class="menu-link">
+            <a href="{{route('dashboard')}}" class="menu-link">
                 <i class="menu-icon tf-icons fa-solid fa-home"></i>
 
                 <div data-i18n="Kesenian">Dashboard</div>
@@ -36,6 +36,21 @@
                 <i class="menu-icon tf-icons fa-solid fa-masks-theater"></i>
 
                 <div data-i18n="Kesenian">Kesenian</div>
+            </a>
+        </li>
+        <!-- Kesenian -->
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'wisata.index',
+                'wisata.create',
+                'wisata.edit',
+                'wisata.show'
+            ])}}"
+        >
+            <a href="{{route('wisata.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-map-marked-alt"></i>
+
+                <div data-i18n="Kesenian">Titik Wisata</div>
             </a>
         </li>
 

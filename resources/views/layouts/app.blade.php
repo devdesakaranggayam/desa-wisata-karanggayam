@@ -126,6 +126,7 @@
                     document.write(new Date().getFullYear());
                   </script>
                   {{config('app.footer')}}
+                  {{config('app.name')}}
                 </div>
               </div>
             </footer>
