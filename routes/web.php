@@ -9,15 +9,14 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManageAdminController;
 
-Route::get('dashboard', function () {
-    return redirect()->route('kesenian.index');
+Route::get('', function () {
+    return redirect()->route('dashboard');
 });
 
 Route::prefix('dashboard')->group(function () {
-    Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login.form');
-    Route::post('login', [AdminAuthController::class, 'login'])->name('login');
-
     Route::middleware('auth:admin')->group(function () {
+        Route::get('index', [DashboardController::class, 'index'])->name('dashboard');
+
         Route::resource('kesenian', KesenianController::class);
         Route::delete('kesenian/{kesenian}/file/{file}', [KesenianController::class, 'removeFile'])->name('kesenian.removeFile');
         
@@ -32,8 +31,9 @@ Route::prefix('dashboard')->group(function () {
         Route::delete('produk/{produk}/file/{file}', [ProdukController::class, 'removeFile'])->name('produk.removeFile');
 
         Route::get('logout', [AdminAuthController::class, 'logout'])->name('logout');
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
+    Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login.form');
+    Route::post('login', [AdminAuthController::class, 'login'])->name('login');
 });
 
 

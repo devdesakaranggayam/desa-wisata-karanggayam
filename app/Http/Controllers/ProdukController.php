@@ -23,7 +23,6 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         $request->validate([
             'nama' => 'required|string|max:255',
             'harga' => 'required|numeric',
