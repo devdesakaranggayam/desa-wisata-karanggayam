@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\TokoController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ProdukController;
@@ -27,6 +28,7 @@ Route::post('forgot-password', [AuthController::class, 'requestReset']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('search', [SearchController::class, 'globalSearch']);
+Route::get('home', [HomeController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {
