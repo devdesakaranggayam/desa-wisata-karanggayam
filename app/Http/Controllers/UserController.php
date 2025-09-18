@@ -48,10 +48,12 @@ class UserController extends Controller
     {
         $request->validate([
             'nama'      => 'required|string|max:100',
-            'email'     => 'required|email',
+            'email'     => 'required|email|unique:users,email,' . $pengguna->id,
+            'nomor_hp'  => 'required|string|max:20|unique:users,nomor_hp,' . $pengguna->id,
+            'password'  => 'nullable|min:6',
         ]);
 
-        $pengguna->update($request->only(['nama', 'no_hp', 'alamat']));
+        $pengguna->update($request->only(['nama', 'nomor_hp', 'email']));
         
         if ($request->password) {
             $pengguna->update($request->only(['password']));
