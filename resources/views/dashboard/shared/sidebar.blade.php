@@ -84,6 +84,20 @@
             </a>
         </li>
 
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'carousel.index',
+                'carousel.show',
+                'carousel.edit',
+            ])}}"
+        >
+            <a href="{{route('carousel.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-image"></i>
+
+                <div data-i18n="Kesenian">Carousel</div>
+            </a>
+        </li>
+
         <li class="menu-item
             {{is_active_sidebar([
                 'pengguna.index',
