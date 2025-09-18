@@ -46,6 +46,12 @@ class KesenianController extends Controller
             return ApiResponse::error("Data kesenian tidak ditemukan", 404);
         }
 
+        // upsert stats
+        $kesenian->stat()->updateOrCreate(
+            ['statable_id' => $kesenian->id, 'statable_type' => Kesenian::class],
+            ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
+        );
+
         return ApiResponse::success($kesenian, "Detail kesenian berhasil diambil", 200);
     }
 }

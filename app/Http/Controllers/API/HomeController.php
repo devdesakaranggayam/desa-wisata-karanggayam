@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Produk;
 use App\Models\Wisata;
+use App\Models\Carousel;
 use App\Models\Kesenian;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
@@ -41,10 +42,13 @@ class HomeController extends Controller
 
         // urutkan lagi berdasarkan created_at
         $sorted = $merged->sortByDesc   ('created_at')->values();
+        $carousels = Carousel::with('files')->get();
 
         $data = [
+            "carousels" => $carousels,
             "explore" => $sorted,
-            "produk" => $randomProduk
+            "produk" => $randomProduk,
+            
         ];
 
         return ApiResponse::success($data);

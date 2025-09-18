@@ -9,7 +9,7 @@ class File extends Model
 {
     protected $table = 'files';
 
-    protected $fillable = ['nama', 'tipe_file', 'path'];
+    protected $guarded = ['id'];
 
     protected $appends = ['file_url'];
 

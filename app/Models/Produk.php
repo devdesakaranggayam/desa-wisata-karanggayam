@@ -20,4 +20,9 @@ class Produk extends Model
     {
         return $this->belongsTo(Toko::class, 'toko_id');
     }
+    
+    public function stat()
+    {
+        return $this->morphOne(Stats::class, 'statable');
+    }
 }

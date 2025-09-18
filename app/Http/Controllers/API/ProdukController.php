@@ -54,6 +54,12 @@ class ProdukController extends Controller
             return ApiResponse::error("Data produk tidak ditemukan", 404);
         }
 
+        // upsert stats
+        $produk->stat()->updateOrCreate(
+            ['statable_id' => $produk->id, 'statable_type' => Produk::class],
+            ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
+        );
+
         return ApiResponse::success($produk, "Detail produk berhasil diambil", 200);
     }
 }
