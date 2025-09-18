@@ -52,6 +52,9 @@ class KesenianController extends Controller
             ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
         );
 
-        return ApiResponse::success($kesenian, "Detail kesenian berhasil diambil", 200);
+        $random = Kesenian::with('files')->inRandomOrder()->take(8)->get();
+        $kesenian->lainnya = $random;
+
+        return ApiResponse::success($data, "Detail kesenian berhasil diambil", 200);
     }
 }

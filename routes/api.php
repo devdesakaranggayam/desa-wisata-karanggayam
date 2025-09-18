@@ -7,6 +7,7 @@ use App\Http\Controllers\API\TokoController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\ProdukController;
 use App\Http\Controllers\API\SearchController;
+use App\Http\Controllers\API\WisataController;
 use App\Http\Controllers\API\KesenianController;
 
 Route::prefix('auth')->group(function () {
@@ -29,6 +30,8 @@ Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('search', [SearchController::class, 'globalSearch']);
 Route::get('home', [HomeController::class, 'index']);
+
+Route::get('wisata/{id}', [WisataController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {

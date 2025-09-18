@@ -60,6 +60,9 @@ class ProdukController extends Controller
             ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
         );
 
+        $random = Produk::with('files','toko')->inRandomOrder()->take(8)->get();
+        $produk->lainnya = $random;
+
         return ApiResponse::success($produk, "Detail produk berhasil diambil", 200);
     }
 }
