@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Wisata;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,19 +26,23 @@ class WisataController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'files.*' => 'nullable|file|max:2048',
         ]);
 
         $wisata = Wisata::create($request->only(['nama', 'deskripsi']));
 
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('wisata', 'public');
-                $wisata->files()->create([
-                    'nama' => $file->getClientOriginalName(),
-                    'tipe_file' => $file->getClientMimeType(),
-                    'path' => $path,
-                ]);
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('wisata', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $wisata->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
             }
         }
 
@@ -62,20 +67,24 @@ class WisataController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'files.*' => 'nullable|file|max:2048',
         ]);
 
         $wisata = Wisata::findOrFail($id);
         $wisata->update($request->only(['nama', 'deskripsi']));
 
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('wisata', 'public');
-                $wisata->files()->create([
-                    'nama' => $file->getClientOriginalName(),
-                    'tipe_file' => $file->getClientMimeType(),
-                    'path' => $path,
-                ]);
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('wisata', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $wisata->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
             }
         }
 

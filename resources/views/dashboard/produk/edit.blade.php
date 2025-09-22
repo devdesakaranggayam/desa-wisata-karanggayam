@@ -43,7 +43,7 @@
                                             alt="{{ $file->nama ?? 'Gambar Produk' }}">
                                 </div>
                                 <button type="button" 
-                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-file" 
+                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-existing-file" 
                                         data-produk-id="{{ $produk->id }}"
                                         data-file-id="{{ $file->id }}">
                                     &times;
@@ -58,9 +58,24 @@
             </div>
     
             <div class="mb-3">
-                <label for="files" class="form-label">Tambah File Baru</label>
-                <input type="file" class="form-control" id="files" name="files[]" multiple>
-                <small class="text-muted">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
+                <label class="form-label">Tambah File</label>
+                <div id="file-wrapper">
+                    <div class="file-group mb-3 row">
+                        <div class="col-md-4">
+                            <input type="file" name="files[0][file]" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="files[0][urutan]" class="form-control" placeholder="Urutan">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-file" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Tambah File
+                </button>
+                <small class="text-muted d-block mt-2">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
             </div>
     
             <button type="submit" class="btn btn-primary">
@@ -97,7 +112,31 @@
 @push('scripts')
 <script>
 $(function () {
-    $(".remove-file").click(function () {
+    let fileIndex = 1;
+
+    // Tambah input file baru
+    $('#add-file').on('click', function () {
+        $('#file-wrapper').append(`
+            <div class="file-group mb-3 row">
+                <div class="col-md-4">
+                    <input type="file" name="files[${fileIndex}][file]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="files[${fileIndex}][urutan]" class="form-control" placeholder="Urutan">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+        `);
+        fileIndex++;
+    });
+
+    $(document).on('click', '.remove-file', function () {
+        $(this).closest('.file-group').remove();
+    });
+
+    $(".remove-existing-file").click(function () {
         let fileId = $(this).data("id");
         let produkId = $(this).data("produk-id");
         let el = $("#file-" + fileId);

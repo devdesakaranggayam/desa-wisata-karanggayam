@@ -37,9 +37,25 @@
             </div>
 
             <div class="mb-3">
-                <label for="files" class="form-label">Upload File (Bisa Banyak)</label>
-                <input type="file" class="form-control" id="files" name="files[]" multiple>
+                <label class="form-label">Tambah File</label>
+                <div id="file-wrapper">
+                    <div class="file-group mb-3 row">
+                        <div class="col-md-4">
+                            <input type="file" name="files[0][file]" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="files[0][urutan]" class="form-control" placeholder="Urutan">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-file" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Tambah File
+                </button>
             </div>
+
 
             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
             <a href="{{ route('produk.index') }}" class="btn btn-secondary">Batal</a>
@@ -47,3 +63,33 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    let fileIndex = 1;
+
+    // Tambah input file baru
+    $('#add-file').on('click', function () {
+        $('#file-wrapper').append(`
+            <div class="file-group mb-3 row">
+                <div class="col-md-4">
+                    <input type="file" name="files[${fileIndex}][file]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="files[${fileIndex}][urutan]" class="form-control" placeholder="Urutan">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+        `);
+        fileIndex++;
+    });
+
+    // Hapus input file baru
+    $(document).on('click', '.remove-file', function () {
+        $(this).closest('.file-group').remove();
+    });
+
+</script>
+@endpush

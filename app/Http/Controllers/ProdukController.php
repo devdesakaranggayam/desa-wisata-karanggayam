@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
 use App\Models\Toko;
+use App\Models\Produk;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class ProdukController extends Controller
 {
     public function index()
     {
-        $produk = Produk::with(['toko', 'files'])->get();
+        $produk = Produk::with(['toko', 'files'])->latest()->get();
         return view('dashboard.produk.index', compact('produk'));
     }
 
@@ -28,19 +29,23 @@ class ProdukController extends Controller
             'harga' => 'required|numeric',
             'deskripsi' => 'nullable|string',
             'toko_id' => 'required|exists:toko,id',
-            'files.*' => 'nullable|file|max:2048',
         ]);
 
         $produk = Produk::create($request->only(['nama', 'harga', 'deskripsi', 'toko_id']));
 
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('produk', 'public');
-                $produk->files()->create([
-                    'nama' => $file->getClientOriginalName(),
-                    'tipe_file' => $file->getClientMimeType(),
-                    'path' => $path,
-                ]);
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('produk', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $produk->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
             }
         }
 
@@ -65,14 +70,19 @@ class ProdukController extends Controller
         $produk = Produk::findOrFail($id);
         $produk->update($request->only(['nama', 'harga', 'deskripsi', 'toko_id']));
 
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                $path = $file->store('produk', 'public');
-                $produk->files()->create([
-                    'nama' => $file->getClientOriginalName(),
-                    'tipe_file' => $file->getClientMimeType(),
-                    'path' => $path,
-                ]);
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('produk', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $produk->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
             }
         }
 

@@ -38,7 +38,7 @@
                                                  alt="{{ $file->nama ?? 'Gambar Kesenian' }}">
                                         </div>
                                         <button type="button" 
-                                                class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-file" 
+                                                class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-existing-file" 
                                                 data-kesenian-id="{{ $kesenian->id }}"
                                                 data-file-id="{{ $file->id }}">
                                             &times;
@@ -53,10 +53,25 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="files" class="form-label">Tambah File Baru</label>
-                        <input type="file" class="form-control" id="files" name="files[]" multiple>
-                        <small class="text-muted">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
+                    <label class="form-label">Tambah File</label>
+                    <div id="file-wrapper">
+                        <div class="file-group mb-3 row">
+                            <div class="col-md-4">
+                                <input type="file" name="files[0][file]" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="files[0][urutan]" class="form-control" placeholder="Urutan">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                            </div>
+                        </div>
                     </div>
+                    <button type="button" id="add-file" class="btn btn-success btn-sm">
+                        <i class="fa fa-plus"></i> Tambah File
+                    </button>
+                    <small class="text-muted d-block mt-2">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
+                </div>
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
                     <a href="{{ route('kesenian.index') }}" class="btn btn-secondary">Batal</a>
@@ -90,36 +105,58 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function () {
-        // tombol hapus ditekan
-        $(document).on('click', '.remove-file', function (e) {
-            e.preventDefault();
+$(function () {
+    let fileIndex = 1;
 
-            if (!confirm("Apakah anda yakin untuk menghapus file ini?")) return;
+    // Tambah input file baru
+    $('#add-file').on('click', function () {
+        $('#file-wrapper').append(`
+            <div class="file-group mb-3 row">
+                <div class="col-md-4">
+                    <input type="file" name="files[${fileIndex}][file]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="files[${fileIndex}][urutan]" class="form-control" placeholder="Urutan">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+        `);
+        fileIndex++;
+    });
 
-            let fileId = $(this).data('file-id');
-            let kesenianId = $(this).data('kesenian-id');
+    $(document).on('click', '.remove-file', function () {
+        $(this).closest('.file-group').remove();
+    });
 
-            $.ajax({
-                url: `/kesenian/${kesenianId}/file/${fileId}`,
-                type: "DELETE",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: "json",
-                success: function (res) {
-                    if (res.success) {
-                        $(`#file-${fileId}`).remove(); // hapus element dari DOM
-                        toastr.success('File berhasil dihapus')
-                    }
-                },
-                error: function (xhr) {
-                    console.error(xhr.responseText);
-                    toastr.error('Gagal menghapus file')
+    $(".remove-existing-file").click(function (e) {
+        e.preventDefault();
+
+        if (!confirm("Apakah anda yakin untuk menghapus file ini?")) return;
+
+        let fileId = $(this).data('file-id');
+        let kesenianId = $(this).data('kesenian-id');
+
+        $.ajax({
+            url: `/kesenian/${kesenianId}/file/${fileId}`,
+            type: "DELETE",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "json",
+            success: function (res) {
+                if (res.success) {
+                    $(`#file-${fileId}`).remove(); // hapus element dari DOM
+                    toastr.success('File berhasil dihapus')
                 }
-            });
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                toastr.error('Gagal menghapus file')
+            }
         });
     });
+});
 </script>
 @endpush
-
