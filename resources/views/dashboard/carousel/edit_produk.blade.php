@@ -44,9 +44,8 @@
                                             <div>
                                                 <small class="text-muted">Urutan: {{ $file->urutan ?? '-' }}</small>
                                             </div>
-                                            <small class="text-muted">Produk: {{ $file->produk_id ?? '-' }}</small>
                                             @if($carousel->identifier === 'home_produk' && $file->produk)
-                                                <div><small class="text-success">Produk: {{ $file->produk->nama }}</small></div>
+                                                <div><small class="card-text">Produk: {{ $file->produk->nama }}</small></div>
                                             @endif
                                         </div>
                                     </div>
