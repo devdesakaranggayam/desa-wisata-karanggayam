@@ -30,4 +30,9 @@ class File extends Model
 
         return $baseUrl . Storage::url($this->path);
     }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'produk_id');
+    }
 }

@@ -14,12 +14,14 @@ class CarouselSeeder extends Seeder
     {
         $carousels = [
             ['nama' => 'Banner', 'identifier'=>'home_banner'],
-            ['nama' => 'Game', 'identifier'=>'home_game'],
             ['nama' => 'Produk', 'identifier'=>'home_produk'],
         ];
 
         foreach ($carousels as $data) {
-            Carousel::create($data);
+            $exists = Carousel::where('identifier', $data["identifier"])->exists();
+            if (!$exists) {
+                Carousel::create($data);
+            }
         }
     }
 }

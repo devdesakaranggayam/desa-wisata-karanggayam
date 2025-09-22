@@ -19,7 +19,7 @@ Route::get('kesenian', [KesenianController::class, 'index']);
 Route::get('kesenian/{id}', [KesenianController::class, 'show']);
 
 Route::get('produk', [ProdukController::class, 'index']);
-Route::get('produk/{id}', [ProdukController::class, 'show']);
+Route::get('produk/{id}', [ProdukController::class, 'show'])->name('api.produk.show');
 
 Route::get('toko', [TokoController::class, 'index']);
 Route::get('toko/{id}', [TokoController::class, 'show']);
@@ -29,6 +29,7 @@ Route::post('forgot-password', [AuthController::class, 'requestReset']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('search', [SearchController::class, 'globalSearch']);
+Route::get('search/detail', [SearchController::class, 'detail']);
 Route::get('home', [HomeController::class, 'index']);
 
 Route::get('wisata/{id}', [WisataController::class, 'show']);

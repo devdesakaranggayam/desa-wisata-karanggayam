@@ -178,3 +178,86 @@ if (! function_exists('admin')) {
         return auth('admin')->user();
     }
 }
+
+if (! function_exists('random_kesenian')) {
+    function random_kesenian($limit, $excludeId = null) {
+        return \App\Models\Kesenian::when($excludeId, function ($query, $excludeId) {
+                return $query->where('id', '!=', $excludeId);
+            })
+            ->with('files')
+            ->inRandomOrder()
+            ->take($limit)
+            ->get()
+            ->map(function ($item) {
+                $item->type = 'kesenian';
+                return $item;
+            });
+    }
+}
+
+if (! function_exists('random_wisata')) {
+    function random_wisata($limit, $excludeId = null) {
+        return \App\Models\Wisata::when($excludeId, function ($query, $excludeId) {
+                return $query->where('id', '!=', $excludeId);
+            })
+            ->with('files')
+            ->inRandomOrder()
+            ->take($limit)
+            ->get()
+            ->map(function ($item) {
+                $item->type = 'wisata';
+                return $item;
+            });
+    }
+}
+
+if (! function_exists('random_produk')) {
+    function random_produk($limit, $excludeId = null) {
+        return \App\Models\Produk::when($excludeId, function ($query, $excludeId) {
+                return $query->where('id', '!=', $excludeId);
+            })
+            ->with('files')
+            ->inRandomOrder()
+            ->take($limit)
+            ->get()
+            ->map(function ($item) {
+                $item->type = 'produk';
+                return $item;
+            });
+    }
+}
+
+if (! function_exists('map_files')) {
+    function map_files($files) {
+        $result = [];
+        foreach ($files as $index => $file) {
+            $result[] = [
+                "id" => $file->id,
+                "nama" => $file->nama,
+                "tipe_file" => $file->tipe_file,
+                "urutan" => $file->urutan ?? $index,
+                "file_url" => $file->file_url,
+                "produk_id" => $file->produk_id
+            ];
+        }
+        return $result;
+    }
+}
+
+if (! function_exists('default_img')) {
+    function default_img($tipe) {
+        // mapping tipe ke file di folder public/assets/img/default/
+        $defaults = [
+            'produk'   => 'assets/img/default/produk.png',
+            'wisata'   => 'assets/img/default/wisata.png',
+            'kesenian' => 'assets/img/default/kesenian.png',
+            'default'  => 'assets/img/default/default.png',
+        ];
+
+        // cek apakah ada di mapping
+        $file = $defaults[$tipe] ?? $defaults['default'];
+
+        // balikin full url (pakai helper asset)
+        return asset($file);
+    }
+}

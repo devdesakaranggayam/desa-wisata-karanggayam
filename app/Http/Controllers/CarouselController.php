@@ -54,7 +54,14 @@ class CarouselController extends Controller
 
     public function edit(Carousel $carousel)
     {
-        return view('dashboard.carousel.edit', compact('carousel'));
+        $carousel->load('files');
+        if ($carousel->identifier == "home_banner") {
+            return view('dashboard.carousel.edit_home', compact('carousel'));
+        } elseif ($carousel->identifier == "home_produk") {
+            $produk = \App\Models\Produk::all();
+            $files = $carousel->files; // ambil file utama
+            return view('dashboard.carousel.edit_produk', compact('carousel', 'produk', 'files'));
+        }
     }
 
     public function update(Request $request, Carousel $carousel)
@@ -78,6 +85,7 @@ class CarouselController extends Controller
                         'path'      => $path,
                         'tipe_file' => $uploadedFile->getClientMimeType(),
                         'urutan'    => $fileInput['urutan'] ?? $index,
+                        'produk_id'    => $fileInput['produk_id'] ?? null,
                     ]);
                 }
             }

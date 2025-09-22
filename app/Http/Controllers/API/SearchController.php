@@ -8,6 +8,8 @@ use App\Models\Kesenian;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExploreResource;
+use App\Http\Resources\ExploreDetailResource;
 
 class SearchController extends Controller
 {
@@ -19,28 +21,14 @@ class SearchController extends Controller
             return ApiResponse::error("Parameter 'keyword' wajib diisi.", 422);
         }
 
-        // Cari di Produk
-        $produk = Produk::where('nama', 'like', '%' . $query . '%')
-            ->orWhere('deskripsi', 'like', '%' . $query . '%')
-            ->with(['files','toko'])
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'type' => 'produk',
-                    'data' => $item,
-                ];
-            });
-
         // Cari di Kesenian
         $kesenian = Kesenian::where('nama', 'like', '%' . $query . '%')
             ->orWhere('deskripsi', 'like', '%' . $query . '%')
             ->with(['files'])
             ->get()
             ->map(function ($item) {
-                return [
-                    'type' => 'kesenian',
-                    'data' => $item,
-                ];
+                $item->type = 'kesenian';
+                return $item;
             });
 
         // Cari di wisata
@@ -49,15 +37,33 @@ class SearchController extends Controller
             ->with(['files'])
             ->get()
             ->map(function ($item) {
-                return [
-                    'type' => 'wisata',
-                    'data' => $item,
-                ];
+                $item->type = 'wisata';
+                return $item;
+
             });
 
         // Gabung hasil
-        $result = $produk->concat($kesenian)->concat($wisata)->values();
+        $result = $kesenian->concat($wisata)->values();
 
-        return ApiResponse::success($result, "Hasil pencarian untuk '{$query}'", 200);
+
+        return ApiResponse::success(ExploreResource::collection($result), "Hasil pencarian untuk '{$query}'", 200);
+    }
+
+    public function detail(Request $request)
+    {
+        $type = $request->tipe;
+        $id = $request->id;
+
+        $data = null;
+        if ($type == 'kesenian') {
+            $data = Kesenian::with('files')->find($id);
+            $data["lainnya"] = ExploreResource(random_kesenian(8, $data->id));
+        } elseif ($type == 'wisata') {
+            $data = Wisata::with('files')->find($id);
+            $data["lainnya"] = ExploreResource::collection(random_wisata(8, $data->id));
+        }
+        $data["tipe"] = $type;
+
+        return ApiResponse::success(new ExploreDetailResource($data), "", 200);
     }
 }
