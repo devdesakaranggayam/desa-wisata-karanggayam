@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('kesenian', [KesenianController::class, 'index']);
-Route::get('kesenian/{id}', [KesenianController::class, 'show']);
+Route::get('kesenian/{id}', [KesenianController::class, 'show'])->name('api.kesenian.show');
 
 Route::get('produk', [ProdukController::class, 'index']);
 Route::get('produk/{id}', [ProdukController::class, 'show'])->name('api.produk.show');
@@ -32,7 +32,7 @@ Route::get('search', [SearchController::class, 'globalSearch']);
 Route::get('search/detail', [SearchController::class, 'detail'])->name('api.explore.detail');
 Route::get('home', [HomeController::class, 'index']);
 
-Route::get('wisata/{id}', [WisataController::class, 'show']);
+Route::get('wisata/{id}', [WisataController::class, 'show'])->name('api.wisata.show');
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {

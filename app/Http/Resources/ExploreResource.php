@@ -19,12 +19,18 @@ class ExploreResource extends JsonResource
             "wisata" => default_img("wisata"), 
         ];
 
+        if ($this->type == "kesenian") {
+            $detailUrl = route('api.kesenian.show', $this->id);
+        } elseif ($this->type == "wisata") {
+            $detailUrl = route('api.wisata.show', $this->id);
+        }
+
         return [
             "id" => $this->id,
             "nama" => $this->nama,
             "thumbnail_url" => $this->files()->first()->file_url ?? $thumbnail[$this->type],
             "tipe" => $this->type,
-            "detail_url" => route('api.explore.detail', ["tipe" => $this->type, "id" => $this->id])
+            "detail_url" => $detailUrl
         ];
     }
 }
