@@ -57,7 +57,7 @@ class SearchController extends Controller
         $data = null;
         if ($type == 'kesenian') {
             $data = Kesenian::with('files')->find($id);
-            $data["lainnya"] = ExploreResource(random_kesenian(8, $data->id));
+            $data["lainnya"] = ExploreResource::collection(random_kesenian(8, $data->id));
         } elseif ($type == 'wisata') {
             $data = Wisata::with('files')->find($id);
             $data["lainnya"] = ExploreResource::collection(random_wisata(8, $data->id));
