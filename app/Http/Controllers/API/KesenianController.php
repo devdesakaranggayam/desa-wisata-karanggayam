@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Kesenian;
-use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ExploreResource;
+use App\Http\Resources\ExploreDetailResource;
 
 class KesenianController extends Controller
 {
@@ -35,8 +37,16 @@ class KesenianController extends Controller
         $perPage = $request->get('per_page', 10);
         $data = $query->paginate($perPage);
 
-        return ApiResponse::paginated($data, "Daftar kesenian berhasil diambil", 200);
+        // tambahin type = "kesenian" di tiap item
+        $mapped = collect($data->items())->map(function ($item) {
+            $item->type = "kesenian";
+            return $item;
+        });
+        $result = ExploreResource::collection($mapped);
+
+        return ApiResponse::paginated($data, "Daftar kesenian berhasil diambil", $result);
     }
+
 
     public function show($id)
     {
@@ -52,9 +62,9 @@ class KesenianController extends Controller
             ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
         );
 
-        $random = Kesenian::with('files')->inRandomOrder()->take(8)->get();
-        $kesenian->lainnya = $random;
+        $kesenian->lainnya = ExploreResource::collection(random_kesenian(8, $id));
+        $kesenian->tipe = "kesenian";
 
-        return ApiResponse::success($data, "Detail kesenian berhasil diambil", 200);
+        return ApiResponse::success(new ExploreDetailResource($kesenian), "Detail kesenian berhasil diambil", 200);
     }
 }

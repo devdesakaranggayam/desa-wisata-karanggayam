@@ -236,8 +236,7 @@ if (! function_exists('map_files')) {
                 "nama" => $file->nama,
                 "tipe_file" => $file->tipe_file,
                 "urutan" => $file->urutan ?? $index,
-                "file_url" => $file->file_url,
-                "produk_id" => $file->produk_id
+                "file_url" => $file->file_url
             ];
         }
         return $result;

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Produk;
-use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProdukResource;
+use App\Http\Resources\ProdukDetailResource;
 
 class ProdukController extends Controller
 {
@@ -42,8 +44,9 @@ class ProdukController extends Controller
 
         $perPage = $request->get('per_page', 10);
         $data = $query->paginate($perPage);
-
-        return ApiResponse::paginated($data, "Daftar produk berhasil diambil", 200);
+        $result = ProdukResource::collection($data->items());
+        
+        return ApiResponse::paginated($data, "Daftar produk berhasil diambil", $result);
     }
 
     public function show($id)
@@ -63,6 +66,6 @@ class ProdukController extends Controller
         $random = Produk::with('files','toko')->inRandomOrder()->take(8)->get();
         $produk->lainnya = $random;
 
-        return ApiResponse::success($produk, "Detail produk berhasil diambil", 200);
+        return ApiResponse::success(new ProdukDetailResource($produk), "Detail produk berhasil diambil", 200);
     }
 }

@@ -21,14 +21,14 @@ class ApiResponse
             'errors'  => $errors,
         ], $status);
     }
-
-    public static function paginated($paginator, $message = null)
+    
+    public static function paginated($paginator, $message = null, $result = null)
     {
         return response()->json([
             'success' => true,
             'message' => $message,
             'data' => [
-                'result' => $paginator->items(),
+                'result' => $result ?? $paginator->items(),
                 'pagination' => [
                     'total'        => $paginator->total(),
                     'per_page'     => $paginator->perPage(),
@@ -38,4 +38,5 @@ class ApiResponse
             ],
         ]);
     }
+
 }

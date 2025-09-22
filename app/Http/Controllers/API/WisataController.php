@@ -6,6 +6,7 @@ use App\Models\Wisata;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExploreResource;
 
 class WisataController extends Controller
 {
@@ -23,11 +24,9 @@ class WisataController extends Controller
             ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
         );
 
-        $random = Wisata::with('files')->inRandomOrder()->take(8)->get();
+        $wisata->lainnya = ExploreResource::collection(random_wisata(8, $id));
+        $wisata->tipe = "wisata";
 
-        $wisata->lainnya = $random;
-
-
-        return ApiResponse::success($wisata, "Detail wisata berhasil diambil", 200);
+        return ApiResponse::success(new ExploreDetailResource($wisata), "Detail wisata berhasil diambil", 200);
     }
 }
