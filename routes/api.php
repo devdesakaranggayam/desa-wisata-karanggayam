@@ -29,7 +29,7 @@ Route::post('forgot-password', [AuthController::class, 'requestReset']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('search', [SearchController::class, 'globalSearch']);
-Route::get('search/detail', [SearchController::class, 'detail']);
+Route::get('search/detail', [SearchController::class, 'detail'])->name('api.explore.detail');
 Route::get('home', [HomeController::class, 'index']);
 
 Route::get('wisata/{id}', [WisataController::class, 'show']);

@@ -23,7 +23,8 @@ class ExploreResource extends JsonResource
             "id" => $this->id,
             "nama" => $this->nama,
             "thumbnail_url" => $this->files()->first()->file_url ?? $thumbnail[$this->type],
-            "tipe" => $this->type
+            "tipe" => $this->type,
+            "detail_url" => route('api.explore.detail', ["tipe" => $this->type, "id" => $this->id])
         ];
     }
 }
