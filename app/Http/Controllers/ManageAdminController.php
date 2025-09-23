@@ -15,12 +15,17 @@ class ManageAdminController extends Controller
 
     public function create()
     {
+        if (!is_superadmin()) {
+            abort(404);
+        }
         return view('dashboard.admin.create');
     }
 
     public function store(Request $request)
     {
-        
+        if (!is_superadmin()) {
+            abort(404);
+        }
         $request->validate([
             'nama'      => 'required|string|max:100',
             'username'  => 'required|string|unique:admins',
@@ -42,11 +47,17 @@ class ManageAdminController extends Controller
 
     public function edit(Admin $admin)
     {
+        if (!is_superadmin()) {
+            abort(404);
+        }
         return view('dashboard.admin.edit', compact('admin'));
     }
 
     public function update(Request $request, Admin $admin)
     {
+        if (!is_superadmin()) {
+            abort(404);
+        }
         $request->validate([
             'nama'      => 'required|string|max:100',
             'email'     => 'required|email|unique:admins,email,' . $admin->id,
@@ -64,6 +75,9 @@ class ManageAdminController extends Controller
 
     public function destroy(Admin $admin)
     {
+        if (!is_superadmin()) {
+            abort(404);
+        }
         $admin->delete();
         return redirect()->route('admin.index')->with('success', 'Admin berhasil dihapus.');
     }

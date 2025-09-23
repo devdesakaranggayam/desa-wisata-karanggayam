@@ -260,3 +260,10 @@ if (! function_exists('default_img')) {
         return asset($file);
     }
 }
+
+
+if (! function_exists('is_superadmin')) {
+    function is_superadmin() {
+        return auth('admin')->user()->is_superadmin ?? false;
+    }
+}
