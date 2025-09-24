@@ -20,8 +20,10 @@ class ProdukDetailResource extends JsonResource
             "nama" => $this->nama,
             "nama_toko" => $this->toko->nama ?? "-",
             "harga" => (float) ($this->harga ?? 0),
+            "deskripsi" => $this->deskripsi,
             "thumbnail_url"=> $files[0]["file_url"] ?? default_img("produk"),
-            "files" => $files
+            "files" => $files,
+            "lainnya" => $this->lainnya
         ];
     }
 }
