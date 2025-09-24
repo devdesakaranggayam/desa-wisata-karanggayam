@@ -9,6 +9,7 @@ use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\KesenianController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GameStampController;
 use App\Http\Controllers\ManageAdminController;
 
 Route::get('', function () {
@@ -29,6 +30,8 @@ Route::prefix('dashboard')->group(function () {
         Route::resource('wisata', WisataController::class);
         Route::resource('kesenian', KesenianController::class);
         Route::resource('toko', TokoController::class);
+
+        Route::resource('game-stamps', GameStampController::class);
 
         Route::prefix('akun')->group(function () {
             Route::resource('pengguna', UserController::class);
