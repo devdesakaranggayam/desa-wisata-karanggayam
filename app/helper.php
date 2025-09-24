@@ -374,3 +374,31 @@ if (! function_exists('search_wisata')) {
         });
     }
 }
+
+if (! function_exists('normalize_hp')) {
+    /**
+     * Normalisasi nomor HP ke format 628xxx
+     *
+     * @param string $noHp
+     * @return string
+     */
+    function normalize_hp($noHp) {
+        // buang semua karakter non-digit
+        $noHp = preg_replace('/\D/', '', $noHp);
+
+        if (str_starts_with($noHp, '0')) {
+            // 08xxx -> 628xxx
+            $noHp = '62' . substr($noHp, 1);
+        } elseif (str_starts_with($noHp, '8')) {
+            // kadang orang tulis 8xxx -> tambahin 62
+            $noHp = '62' . $noHp;
+        } elseif (str_starts_with($noHp, '62') === false && str_starts_with($noHp, '+62')) {
+            // +62xxx -> 62xxx
+            $noHp = substr($noHp, 1);
+        } else {
+            $noHp = "-";
+        }
+
+        return $noHp;
+    }
+}

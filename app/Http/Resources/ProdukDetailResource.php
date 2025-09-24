@@ -19,6 +19,7 @@ class ProdukDetailResource extends JsonResource
             "id" => $this->id,
             "nama" => $this->nama,
             "nama_toko" => $this->toko->nama ?? "-",
+            "nomor_hp_toko" => normalize_hp($this->toko->no_hp),
             "harga" => (float) ($this->harga ?? 0),
             "deskripsi" => $this->deskripsi,
             "thumbnail_url"=> $files[0]["file_url"] ?? default_img("produk"),
