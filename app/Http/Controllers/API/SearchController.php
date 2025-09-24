@@ -53,4 +53,23 @@ class SearchController extends Controller
 
         return ApiResponse::success(new ExploreDetailResource($data), "", 200);
     }
+
+    public function explore(Request $request)
+    {
+        $tipe = $request->tipe;
+        if (!$tipe || $tipe == "all") {
+            $kesenian = random_kesenian(4);
+            $wisata = random_wisata(4);
+            $explore = $kesenian->concat($wisata)->values();
+
+        } else {
+            if ($tipe == "kesenian") {
+                $explore = random_kesenian(8);
+            } else {
+                $explore = random_wisata(8);
+            }
+        }
+        $result = ExploreResource::collection($explore);
+        return ApiResponse::success($result, "", 200);
+    }
 }

@@ -29,6 +29,7 @@ Route::post('forgot-password', [AuthController::class, 'requestReset']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('search', [SearchController::class, 'globalSearch']);
+Route::get('explore', [SearchController::class, 'explore']);
 Route::get('explore/detail', [SearchController::class, 'detail'])->name('api.search.detail');
 Route::get('home', [HomeController::class, 'index']);
 
