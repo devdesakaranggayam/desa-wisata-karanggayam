@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Toko;
-use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\TokoResource;
 
 class TokoController extends Controller
 {
@@ -32,10 +33,8 @@ class TokoController extends Controller
             $query->orderBy('id', 'desc');
         }
 
-        $perPage = $request->get('per_page', 10);
-        $data = $query->paginate($perPage);
-
-        return ApiResponse::paginated($data, "Daftar toko berhasil diambil", 200);
+        $data = $query->get();
+        return ApiResponse::success(TokoResource::collection($data), "Daftar toko berhasil diambil", 200);
     }
 
     public function show($id)
@@ -46,6 +45,6 @@ class TokoController extends Controller
             return ApiResponse::error("Data toko tidak ditemukan", 404);
         }
 
-        return ApiResponse::success($toko, "Detail toko berhasil diambil", 200);
+        return ApiResponse::success(new TokoResource($toko), "Detail toko berhasil diambil", 200);
     }
 }
