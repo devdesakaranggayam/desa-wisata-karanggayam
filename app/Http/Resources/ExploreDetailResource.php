@@ -15,12 +15,19 @@ class ExploreDetailResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $thumbnail = [
+            "kesenian" => default_img("kesenian"), 
+            "wisata" => default_img("wisata"), 
+        ];
+        $files = map_files($this->files);
+
         return [
             "id" => $this->id,
             "nama" => $this->nama,
             "tipe" => $this->tipe,
             "deskripsi" => $this->deskripsi,
-            "files" => map_files($this->files),
+            "thumbnail_url"=> $files[0]["file_url"] ?? $thumbnail[$this->tipe],
+            "files" => $files,
             "lainnya" => $this->lainnya
         ];
     }

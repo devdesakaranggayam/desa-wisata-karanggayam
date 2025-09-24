@@ -19,11 +19,7 @@ class ExploreResource extends JsonResource
             "wisata" => default_img("wisata"), 
         ];
 
-        if ($this->type == "kesenian") {
-            $detailUrl = route('api.kesenian.show', $this->id);
-        } elseif ($this->type == "wisata") {
-            $detailUrl = route('api.wisata.show', $this->id);
-        }
+        $detailUrl = route('api.search.detail', ['id' => $this->id, 'tipe' => $this->type]);
 
         return [
             "id" => $this->id,

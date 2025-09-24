@@ -2,6 +2,9 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Produk;
+use App\Models\Wisata;
+use App\Models\Kesenian;
 use Illuminate\Support\Facades\Route;
 
 if (!function_exists('is_active_sidebar')) {
@@ -213,7 +216,7 @@ if (! function_exists('random_wisata')) {
 
 if (! function_exists('random_produk')) {
     function random_produk($limit, $excludeId = null) {
-        return \App\Models\Produk::when($excludeId, function ($query, $excludeId) {
+        return Produk::when($excludeId, function ($query, $excludeId) {
                 return $query->where('id', '!=', $excludeId);
             })
             ->with('files')
@@ -271,5 +274,103 @@ if (! function_exists('is_superadmin')) {
 if (! function_exists('is_dev')) {
     function is_dev() {
         return auth('admin')->user()->username == "developer" ?? false;
+    }
+}
+
+if (! function_exists('search_produk')) {
+    /**
+     * Cari produk berdasarkan nama atau deskripsi
+     *
+     * @param string $query
+     * @param int|null $limit
+     * @param array $options ['sort_by' => 'kolom', 'sort_dir' => 'asc|desc']
+     * @return \Illuminate\Support\Collection
+     */
+    function search_produk($query, $limit = null, $options = []) {
+        $builder = Produk::where(function ($q) use ($query) {
+                $q->where('nama', 'like', '%' . $query . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+            })
+            ->with('files');
+
+        // kalau ada opsi sorting
+        if (isset($options['sort_by'])) {
+            $sortBy  = $options['sort_by'];
+            $sortDir = $options['sort_dir'] ?? 'asc'; // default asc
+            $builder->orderBy($sortBy, $sortDir);
+        }
+
+        // kalau $limit ada → pakai limit(), kalau tidak → langsung get()
+        $result = $limit ? $builder->limit($limit)->get() : $builder->get();
+
+        return $result->map(function ($item) {
+            $item->type = 'produk';
+            return $item;
+        });
+    }
+}
+
+
+if (! function_exists('search_kesenian')) {
+    /**
+     * Cari kesenian berdasarkan nama atau deskripsi
+     *
+     * @param string $query
+     * @param int|null $limit
+     * @param array $options ['sort_by' => 'kolom', 'sort_dir' => 'asc|desc']
+     * @return \Illuminate\Support\Collection
+     */
+    function search_kesenian($query, $limit = null, $options = []) {
+        $builder = Kesenian::where(function ($q) use ($query) {
+                $q->where('nama', 'like', '%' . $query . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+            })
+            ->with('files');
+
+        // kalau ada opsi sorting
+        if (isset($options['sort_by'])) {
+            $sortBy  = $options['sort_by'];
+            $sortDir = $options['sort_dir'] ?? 'asc'; // default asc
+            $builder->orderBy($sortBy, $sortDir);
+        }
+
+        $result = $limit ? $builder->limit($limit)->get() : $builder->get();
+
+        return $result->map(function ($item) {
+            $item->type = 'kesenian';
+            return $item;
+        });
+    }
+}
+
+if (! function_exists('search_wisata')) {
+    /**
+     * Cari wisata berdasarkan nama atau deskripsi, dengan optional limit & sorting
+     *
+     * @param string $query
+     * @param int|null $limit
+     * @param array $options ['sort_by' => 'kolom', 'sort_dir' => 'asc|desc']
+     * @return \Illuminate\Support\Collection
+     */
+    function search_wisata($query, $limit = null, $options = []) {
+        $builder = Wisata::where(function ($q) use ($query) {
+                $q->where('nama', 'like', '%' . $query . '%')
+                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+            })
+            ->with('files');
+
+        // kalau ada opsi sorting
+        if (isset($options['sort_by'])) {
+            $sortBy  = $options['sort_by'];
+            $sortDir = $options['sort_dir'] ?? 'asc'; // default asc
+            $builder->orderBy($sortBy, $sortDir);
+        }
+
+        $result = $limit ? $builder->limit($limit)->get() : $builder->get();
+
+        return $result->map(function ($item) {
+            $item->type = 'wisata';
+            return $item;
+        });
     }
 }
