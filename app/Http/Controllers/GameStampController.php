@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class GameStampController extends Controller
 {
+    public function __construct()
+    {
+        if (!is_dev()) {
+            abort(404);
+        }
+    }
+    
     public function index()
     {
         $stamps = GameStamp::all();

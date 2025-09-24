@@ -142,5 +142,20 @@
                 </li>
             </ul>
         </li>
+        @if(is_dev())
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'game-stamps.index',
+                'game-stamps.create',
+                'game-stamps.edit',
+            ])}}"
+        >
+            <a href="{{route('game-stamps.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-trophy"></i>
+
+                <div data-i18n="Kesenian">Game Stamp</div>
+            </a>
+        </li>
+        @endif
     </ul>
 </aside>

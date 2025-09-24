@@ -267,3 +267,9 @@ if (! function_exists('is_superadmin')) {
         return auth('admin')->user()->is_superadmin ?? false;
     }
 }
+
+if (! function_exists('is_dev')) {
+    function is_dev() {
+        return auth('admin')->user()->username == "developer" ?? false;
+    }
+}
