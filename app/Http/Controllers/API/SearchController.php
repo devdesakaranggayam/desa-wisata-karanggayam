@@ -56,20 +56,35 @@ class SearchController extends Controller
 
     public function explore(Request $request)
     {
-        $tipe = $request->tipe;
-        if (!$tipe || $tipe == "all") {
-            $kesenian = random_kesenian(4);
-            $wisata = random_wisata(4);
-            $explore = $kesenian->concat($wisata)->values();
+        $tipe    = $request->input('tipe', 'all');
+        $keyword = $request->input('keyword');
+        $limit   = $request->input('limit');   // opsional
+        $options = $request->except(['tipe', 'keyword', 'limit']); // biar bisa oper sorting dsb
 
-        } else {
-            if ($tipe == "kesenian") {
-                $explore = random_kesenian(8);
-            } else {
-                $explore = random_wisata(8);
-            }
+        // Mode pencarian
+        if ($keyword) {
+            $explore = match ($tipe) {
+                'kesenian' => search_kesenian($keyword, $limit, $options),
+                'wisata'   => search_wisata($keyword, $limit, $options),
+                default    => search_kesenian($keyword, $limit, $options)
+                                ->concat(search_wisata($keyword, $limit, $options))
+                                ->values(),
+            };
+        } 
+        // Mode random (tanpa keyword)
+        else {
+            $explore = match ($tipe) {
+                'kesenian' => random_kesenian($limit ?? 8),
+                'wisata'   => random_wisata($limit ?? 8),
+                default    => random_kesenian($limit ?? 4)
+                                ->concat(random_wisata($limit ?? 4))
+                                ->values(),
+            };
         }
+
         $result = ExploreResource::collection($explore);
+
         return ApiResponse::success($result, "", 200);
     }
+
 }

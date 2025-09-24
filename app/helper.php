@@ -288,8 +288,8 @@ if (! function_exists('search_produk')) {
      */
     function search_produk($query, $limit = null, $options = []) {
         $builder = Produk::where(function ($q) use ($query) {
-                $q->where('nama', 'like', '%' . $query . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+                $q->where('nama', 'like', '%' . $query . '%');
+                //   ->orWhere('deskripsi', 'like', '%' . $query . '%');
             })
             ->with('files');
 
@@ -322,8 +322,8 @@ if (! function_exists('search_kesenian')) {
      */
     function search_kesenian($query, $limit = null, $options = []) {
         $builder = Kesenian::where(function ($q) use ($query) {
-                $q->where('nama', 'like', '%' . $query . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+                $q->where('nama', 'like', '%' . $query . '%');
+                //   ->orWhere('deskripsi', 'like', '%' . $query . '%');
             })
             ->with('files');
 
@@ -354,8 +354,8 @@ if (! function_exists('search_wisata')) {
      */
     function search_wisata($query, $limit = null, $options = []) {
         $builder = Wisata::where(function ($q) use ($query) {
-                $q->where('nama', 'like', '%' . $query . '%')
-                  ->orWhere('deskripsi', 'like', '%' . $query . '%');
+                $q->where('nama', 'like', '%' . $query . '%');
+                //   ->orWhere('deskripsi', 'like', '%' . $query . '%');
             })
             ->with('files');
 
