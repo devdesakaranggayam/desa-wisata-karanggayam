@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Storage;
+use App\Models\Question;
 use App\Models\GameStamp;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -123,40 +124,72 @@ class GameStampController extends Controller
         
         $gameStamp->save();
 
-        // Reset pertanyaan lama + jawaban
-        foreach ($gameStamp->questions as $oldQ) {
-            if ($oldQ->thumbnail_path && Storage::disk('public')->exists($oldQ->thumbnail_path)) {
-                Storage::disk('public')->delete($oldQ->thumbnail_path);
-            }
-            $oldQ->answers()->delete();
-            $oldQ->delete();
-        }
-
-        // Simpan pertanyaan baru
+        // update atau sync berdasarkan 'id'
         if ($request->has('questions')) {
             foreach ($request->questions as $q) {
-                $thumbPath = null;
-                if (isset($q['thumbnail_path']) && $q['thumbnail_path'] instanceof \Illuminate\Http\UploadedFile) {
-                    $thumbFile = $q['thumbnail_path'];
-                    $thumbName = Str::random(10) . '.' . $thumbFile->getClientOriginalExtension();
-                    $thumbPath = $thumbFile->storeAs('game/questions', $thumbName, 'public');
-                }
+                // Cek apakah ini pertanyaan lama (ada id)
+                if (isset($q['id'])) {
+                    $question = Question::find($q['id']);
 
-                $question = $gameStamp->questions()->create([
-                    'question_text'  => $q['question_text'],
-                    'thumbnail_path' => $thumbPath,
-                ]);
+                    if ($question) {
+                        // handle thumbnail
+                        $thumbPath = $question->thumbnail_path; // default pakai yang lama
+                        if (isset($q['thumbnail_path']) && $q['thumbnail_path'] instanceof \Illuminate\Http\UploadedFile) {
+                            // hapus file lama kalau ada
+                            if ($thumbPath && Storage::disk('public')->exists($thumbPath)) {
+                                Storage::disk('public')->delete($thumbPath);
+                            }
+                            // upload baru
+                            $thumbFile = $q['thumbnail_path'];
+                            $thumbName = Str::random(10) . '.' . $thumbFile->getClientOriginalExtension();
+                            $thumbPath = $thumbFile->storeAs('game/questions', $thumbName, 'public');
+                        }
 
-                if (isset($q['answers'])) {
-                    foreach ($q['answers'] as $a) {
-                        $question->answers()->create([
-                            'answer_text' => $a['answer_text'],
-                            'is_correct'  => isset($a['is_correct']) ? 1 : 0,
+                        // update pertanyaan
+                        $question->update([
+                            'question_text'  => $q['question_text'],
+                            'thumbnail_path' => $thumbPath,
                         ]);
+
+                        // reset jawaban lama
+                        $question->answers()->delete();
+
+                        // simpan jawaban baru
+                        if (isset($q['answers'])) {
+                            foreach ($q['answers'] as $a) {
+                                $question->answers()->create([
+                                    'answer_text' => $a['answer_text'],
+                                    'is_correct'  => isset($a['is_correct']) ? 1 : 0,
+                                ]);
+                            }
+                        }
+                    }
+                } else {
+                    // pertanyaan baru
+                    $thumbPath = null;
+                    if (isset($q['thumbnail_path']) && $q['thumbnail_path'] instanceof \Illuminate\Http\UploadedFile) {
+                        $thumbFile = $q['thumbnail_path'];
+                        $thumbName = Str::random(10) . '.' . $thumbFile->getClientOriginalExtension();
+                        $thumbPath = $thumbFile->storeAs('game/questions', $thumbName, 'public');
+                    }
+
+                    $question = $gameStamp->questions()->create([
+                        'question_text'  => $q['question_text'],
+                        'thumbnail_path' => $thumbPath,
+                    ]);
+
+                    if (isset($q['answers'])) {
+                        foreach ($q['answers'] as $a) {
+                            $question->answers()->create([
+                                'answer_text' => $a['answer_text'],
+                                'is_correct'  => isset($a['is_correct']) ? 1 : 0,
+                            ]);
+                        }
                     }
                 }
             }
         }
+
 
         return redirect()->route('game-stamps.index')
                         ->with('success', 'Game Stamp berhasil diperbarui.');
