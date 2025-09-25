@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
 use App\Models\GameStamp;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Constants\GameStampType;
 
 class GameStampController extends Controller
 {
@@ -23,7 +25,8 @@ class GameStampController extends Controller
 
     public function create()
     {
-        return view('dashboard.game-stamp.create');
+        $types = GameStampType::all();
+        return view('dashboard.game-stamp.create', compact('types'));
     }
 
     public function store(Request $request)
@@ -46,10 +49,12 @@ class GameStampController extends Controller
 
         // Simpan GameStamp
         $gameStamp = GameStamp::create([
-            'nama'      => $request->nama,
+            'nama' => $request->nama,
             'icon_path' => $iconPath,
-            'x'         => $request->x,
-            'y'         => $request->y,
+            'x' => $request->x,
+            'y' => $request->y,
+            'type' => $request->type,
+            'passing_score' => $request->passing_score
         ]);
 
         // Simpan pertanyaan + jawaban
@@ -82,7 +87,8 @@ class GameStampController extends Controller
 
     public function edit(GameStamp $gameStamp)
     {
-        return view('dashboard.game-stamp.edit', compact('gameStamp'));
+        $types = GameStampType::all();
+        return view('dashboard.game-stamp.edit', compact('gameStamp','types'));
     }
 
     public function update(Request $request, GameStamp $gameStamp)
@@ -110,8 +116,11 @@ class GameStampController extends Controller
         }
 
         $gameStamp->nama = $request->nama;
-        $gameStamp->x    = $request->x;
-        $gameStamp->y    = $request->y;
+        $gameStamp->x = $request->x;
+        $gameStamp->y = $request->y;
+        $gameStamp->type = $request->type;
+        $gameStamp->passing_score = $request->passing_score;
+        
         $gameStamp->save();
 
         // Reset pertanyaan lama + jawaban
@@ -166,7 +175,7 @@ class GameStampController extends Controller
 
         // Hapus file icon di storage jika ada
         if ($gameStamp->icon_path && \Storage::disk('public')->exists($gameStamp->icon_path)) {
-            \Storage::disk('public')->delete($gameStamp->icon_path);
+            Storage::disk('public')->delete($gameStamp->icon_path);
         }
 
         // Hapus game stamp

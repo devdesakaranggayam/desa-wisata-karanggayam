@@ -28,6 +28,28 @@
                         <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Tipe Stamp</label>
+                        <select name="type" id="type" class="form-control" required>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}" 
+                                    {{ old('type', $gameStamp->type) == $type ? 'selected' : '' }}>
+                                    {{ ucfirst($type) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="passing_score" class="form-label">Skor Minimum</label>
+                        <input type="number" 
+                            name="passing_score" 
+                            class="form-control" 
+                            value="{{ old('passing_score', $gameStamp->passing_score) }}" 
+                            required>
+                    </div>
+
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="x" class="form-label">Koordinat X</label>
@@ -40,65 +62,68 @@
                                    value="{{ old('y', $gameStamp->y) }}" required>
                         </div>
                     </div>
-
-                    <hr>
-                    <h5>Daftar Pertanyaan</h5>
-                    <div id="questions-wrapper">
-                        @foreach($gameStamp->questions as $qIdx => $question)
-                        <div class="card mb-3 question-block">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6>Pertanyaan</h6>
-                                    <button type="button" class="btn btn-sm btn-danger remove-question"><i class="fa fa-trash"></i></button>
-                                </div>
-
-                                <input type="hidden" name="questions[{{ $qIdx }}][id]" value="{{ $question->id }}">
-
-                                <div class="mb-3">
-                                    <input type="text" name="questions[{{ $qIdx }}][question_text]" 
-                                           class="form-control" 
-                                           value="{{ old("questions.$qIdx.question_text", $question->question_text) }}" 
-                                           required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Thumbnail Pertanyaan</label><br>
-                                    @if($question->thumbnail_path)
-                                        <img src="{{ asset('storage/'.$question->thumbnail_path) }}" alt="thumb" height="60" class="mb-2">
-                                    @endif
-                                    <input type="file" name="questions[{{ $qIdx }}][thumbnail_path]" 
-                                           class="form-control" accept="image/*">
-                                    <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
-                                </div>
-
-                                <h6>Jawaban</h6>
-                                <div class="answers-wrapper">
-                                    @foreach($question->answers as $aIdx => $answer)
-                                    <div class="input-group mb-2">
-                                        <input type="hidden" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][id]" value="{{ $answer->id }}">
-                                        <input type="text" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][answer_text]" 
-                                               class="form-control" 
-                                               value="{{ old("questions.$qIdx.answers.$aIdx.answer_text", $answer->answer_text) }}" 
-                                               required>
-                                        <div class="input-group-text">
-                                            <input type="checkbox" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][is_correct]" 
-                                                   value="1" {{ $answer->is_correct ? 'checked' : '' }}> Benar
-                                        </div>
-                                        <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
+                    
+                    <div class="quiz-wrapper"
+                        style="{{ $gameStamp->type == \App\Constants\GameStampType::QUIZ ? '' : 'display: none;' }}">
+                        <hr>
+                        <h5>Daftar Pertanyaan</h5>
+                        <div id="questions-wrapper">
+                            @foreach($gameStamp->questions as $qIdx => $question)
+                            <div class="card mb-3 question-block">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6>Pertanyaan</h6>
+                                        <button type="button" class="btn btn-sm btn-danger remove-question"><i class="fa fa-trash"></i></button>
                                     </div>
-                                    @endforeach
+    
+                                    <input type="hidden" name="questions[{{ $qIdx }}][id]" value="{{ $question->id }}">
+    
+                                    <div class="mb-3">
+                                        <input type="text" name="questions[{{ $qIdx }}][question_text]" 
+                                               class="form-control" 
+                                               value="{{ old("questions.$qIdx.question_text", $question->question_text) }}" 
+                                               required>
+                                    </div>
+    
+                                    <div class="mb-3">
+                                        <label class="form-label">Thumbnail Pertanyaan</label><br>
+                                        @if($question->thumbnail_path)
+                                            <img src="{{ asset('storage/'.$question->thumbnail_path) }}" alt="thumb" height="60" class="mb-2">
+                                        @endif
+                                        <input type="file" name="questions[{{ $qIdx }}][thumbnail_path]" 
+                                               class="form-control" accept="image/*">
+                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
+                                    </div>
+    
+                                    <h6>Jawaban</h6>
+                                    <div class="answers-wrapper">
+                                        @foreach($question->answers as $aIdx => $answer)
+                                        <div class="input-group mb-2">
+                                            <input type="hidden" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][id]" value="{{ $answer->id }}">
+                                            <input type="text" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][answer_text]" 
+                                                   class="form-control" 
+                                                   value="{{ old("questions.$qIdx.answers.$aIdx.answer_text", $answer->answer_text) }}" 
+                                                   required>
+                                            <div class="input-group-text">
+                                                <input type="checkbox" name="questions[{{ $qIdx }}][answers][{{ $aIdx }}][is_correct]" 
+                                                       value="1" {{ $answer->is_correct ? 'checked' : '' }}> Benar
+                                            </div>
+                                            <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="{{ $qIdx }}">
+                                        <i class="fa fa-plus"></i> Tambah Jawaban
+                                    </button>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="{{ $qIdx }}">
-                                    <i class="fa fa-plus"></i> Tambah Jawaban
-                                </button>
                             </div>
+                            @endforeach
                         </div>
-                        @endforeach
+    
+                        <button type="button" class="btn btn-sm btn-success mb-3" id="add-question">
+                            <i class="fa fa-plus"></i> Tambah Pertanyaan
+                        </button>
                     </div>
-
-                    <button type="button" class="btn btn-sm btn-success mb-3" id="add-question">
-                        <i class="fa fa-plus"></i> Tambah Pertanyaan
-                    </button>
 
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">Update</button>
@@ -113,68 +138,84 @@
 
 @push('scripts')
 <script>
-let questionIndex = {{ $gameStamp->questions->count() }};
-
-// Tambah pertanyaan baru
-$('#add-question').click(function() {
-    let qHtml = `
-    <div class="card mb-3 question-block">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h6>Pertanyaan Baru</h6>
-                <button type="button" class="btn btn-sm btn-danger remove-question"><i class="fa fa-trash"></i></button>
-            </div>
-
-            <div class="mb-3">
-                <input type="text" name="questions[${questionIndex}][question_text]" 
-                       class="form-control" placeholder="Tulis pertanyaan..." required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Thumbnail Pertanyaan</label>
-                <input type="file" name="questions[${questionIndex}][thumbnail_path]" 
-                       class="form-control" accept="image/*" required>
-            </div>
-
-            <h6>Jawaban</h6>
-            <div class="answers-wrapper"></div>
-            <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="${questionIndex}">
-                <i class="fa fa-plus"></i> Tambah Jawaban
-            </button>
-        </div>
-    </div>`;
-    
-    $('#questions-wrapper').append(qHtml);
-    questionIndex++;
-});
-
-// Hapus pertanyaan
-$(document).on('click', '.remove-question', function() {
-    $(this).closest('.question-block').remove();
-});
-
-// Tambah jawaban
-$(document).on('click', '.add-answer', function() {
-    let qIdx = $(this).data('index');
-    let answersWrapper = $(this).siblings('.answers-wrapper');
-    let answerCount = answersWrapper.children().length;
-
-    let aHtml = `
-    <div class="input-group mb-2">
-        <input type="text" name="questions[${qIdx}][answers][${answerCount}][answer_text]" 
-               class="form-control" placeholder="Tulis jawaban..." required>
-        <div class="input-group-text">
-            <input type="checkbox" name="questions[${qIdx}][answers][${answerCount}][is_correct]" value="1"> Benar
-        </div>
-        <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
-    </div>`;
-    
-    answersWrapper.append(aHtml);
-});
-
-// Hapus jawaban
-$(document).on('click', '.remove-answer', function() {
-    $(this).closest('.input-group').remove();
-});
+    $(document).ready(function() {
+        let questionIndex = {{ $gameStamp->questions->count() }};
+        
+        // Tambah pertanyaan baru
+        $('#add-question').click(function() {
+            let qHtml = `
+            <div class="card mb-3 question-block">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6>Pertanyaan Baru</h6>
+                        <button type="button" class="btn btn-sm btn-danger remove-question"><i class="fa fa-trash"></i></button>
+                    </div>
+        
+                    <div class="mb-3">
+                        <input type="text" name="questions[${questionIndex}][question_text]" 
+                               class="form-control" placeholder="Tulis pertanyaan..." required>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label class="form-label">Thumbnail Pertanyaan</label>
+                        <input type="file" name="questions[${questionIndex}][thumbnail_path]" 
+                               class="form-control" accept="image/*" required>
+                    </div>
+        
+                    <h6>Jawaban</h6>
+                    <div class="answers-wrapper"></div>
+                    <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="${questionIndex}">
+                        <i class="fa fa-plus"></i> Tambah Jawaban
+                    </button>
+                </div>
+            </div>`;
+            
+            $('#questions-wrapper').append(qHtml);
+            questionIndex++;
+        });
+        
+        // Hapus pertanyaan
+        $(document).on('click', '.remove-question', function() {
+            $(this).closest('.question-block').remove();
+        });
+        
+        // Tambah jawaban
+        $(document).on('click', '.add-answer', function() {
+            let qIdx = $(this).data('index');
+            let answersWrapper = $(this).siblings('.answers-wrapper');
+            let answerCount = answersWrapper.children().length;
+        
+            let aHtml = `
+            <div class="input-group mb-2">
+                <input type="text" name="questions[${qIdx}][answers][${answerCount}][answer_text]" 
+                       class="form-control" placeholder="Tulis jawaban..." required>
+                <div class="input-group-text">
+                    <input type="checkbox" name="questions[${qIdx}][answers][${answerCount}][is_correct]" value="1"> Benar
+                </div>
+                <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
+            </div>`;
+            
+            answersWrapper.append(aHtml);
+        });
+        
+        // Hapus jawaban
+        $(document).on('click', '.remove-answer', function() {
+            $(this).closest('.input-group').remove();
+        });
+        
+        function toggleQuizWrapper() {
+            if ($('#type').val() === "{{ \App\Constants\GameStampType::PHOTO }}") {
+                $('.quiz-wrapper').hide();
+            } else {
+                $('.quiz-wrapper').show();
+            }
+        }
+        
+        // cek pertama kali
+        toggleQuizWrapper();
+        
+        // saat onchange
+        $('#type').on('change', toggleQuizWrapper);
+    });
 </script>
 @endpush

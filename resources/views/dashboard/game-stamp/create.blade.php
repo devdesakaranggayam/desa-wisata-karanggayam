@@ -22,6 +22,18 @@
                         <input type="file" name="icon_path" class="form-control" accept="image/*" required>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Tipe Stamp</label>
+                        <select name="type" id="type" class="form-control" required>
+                            @foreach ($types as $type)
+                                <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passing_score" class="form-label">Skor Minimum</label>
+                        <input type="number" name="passing_score" class="form-control" required>
+                    </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="x" class="form-label">Koordinat X</label>
@@ -33,13 +45,14 @@
                         </div>
                     </div>
 
-                    <hr>
-                    <h5>Daftar Pertanyaan</h5>
-                    <div id="questions-wrapper"></div>
-                    <button type="button" class="btn btn-sm btn-success mb-3" id="add-question">
-                        <i class="fa fa-plus"></i> Tambah Pertanyaan
-                    </button>
-
+                    <div class="quiz-wrapper">
+                        <hr>
+                        <h5>Daftar Pertanyaan</h5>
+                        <div id="questions-wrapper"></div>
+                        <button type="button" class="btn btn-sm btn-success mb-3" id="add-question">
+                            <i class="fa fa-plus"></i> Tambah Pertanyaan
+                        </button>
+                    </div>
                     <div class="mt-4">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <a href="{{ route('game-stamps.index') }}" class="btn btn-secondary">Batal</a>
@@ -53,69 +66,85 @@
 
 @push('scripts')
 <script>
-let questionIndex = 0;
+    $(document).ready(function() {
+        let questionIndex = 0;
 
-$('#add-question').click(function() {
-    let qHtml = `
-    <div class="card mb-3 question-block">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h6>Pertanyaan</h6>
-                <button type="button" class="btn btn-sm btn-danger remove-question">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </div>
+        $('#add-question').click(function() {
+            let qHtml = `
+            <div class="card mb-3 question-block">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6>Pertanyaan</h6>
+                        <button type="button" class="btn btn-sm btn-danger remove-question">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
 
-            <div class="mb-3">
-                <input type="text" name="questions[${questionIndex}][question_text]" 
-                       class="form-control" placeholder="Tulis pertanyaan..." required>
-            </div>
+                    <div class="mb-3">
+                        <input type="text" name="questions[${questionIndex}][question_text]" 
+                            class="form-control" placeholder="Tulis pertanyaan..." required>
+                    </div>
 
-            <div class="mb-3">
-                <label class="form-label">Thumbnail Pertanyaan</label>
-                <input type="file" name="questions[${questionIndex}][thumbnail_path]" 
-                       class="form-control" accept="image/*" required>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thumbnail Pertanyaan</label>
+                        <input type="file" name="questions[${questionIndex}][thumbnail_path]" 
+                            class="form-control" accept="image/*" required>
+                    </div>
 
-            <h6>Jawaban</h6>
-            <div class="answers-wrapper"></div>
-            <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="${questionIndex}">
-                <i class="fa fa-plus"></i> Tambah Jawaban
-            </button>
-        </div>
-    </div>`;
-    
-    $('#questions-wrapper').append(qHtml);
-    questionIndex++;
-});
+                    <h6>Jawaban</h6>
+                    <div class="answers-wrapper"></div>
+                    <button type="button" class="btn btn-sm btn-outline-primary add-answer" data-index="${questionIndex}">
+                        <i class="fa fa-plus"></i> Tambah Jawaban
+                    </button>
+                </div>
+            </div>`;
+            
+            $('#questions-wrapper').append(qHtml);
+            questionIndex++;
+        });
 
-// Hapus pertanyaan
-$(document).on('click', '.remove-question', function() {
-    $(this).closest('.question-block').remove();
-});
+        // Hapus pertanyaan
+        $(document).on('click', '.remove-question', function() {
+            $(this).closest('.question-block').remove();
+        });
 
-// Tambah jawaban
-$(document).on('click', '.add-answer', function() {
-    let qIdx = $(this).data('index');
-    let answersWrapper = $(this).siblings('.answers-wrapper');
-    let answerCount = answersWrapper.children().length;
+        // Tambah jawaban
+        $(document).on('click', '.add-answer', function() {
+            let qIdx = $(this).data('index');
+            let answersWrapper = $(this).siblings('.answers-wrapper');
+            let answerCount = answersWrapper.children().length;
 
-    let aHtml = `
-    <div class="input-group mb-2">
-        <input type="text" name="questions[${qIdx}][answers][${answerCount}][answer_text]" 
-               class="form-control" placeholder="Tulis jawaban..." required>
-        <div class="input-group-text">
-            <input type="checkbox" name="questions[${qIdx}][answers][${answerCount}][is_correct]" value="1"> Benar
-        </div>
-        <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
-    </div>`;
-    
-    answersWrapper.append(aHtml);
-});
+            let aHtml = `
+            <div class="input-group mb-2">
+                <input type="text" name="questions[${qIdx}][answers][${answerCount}][answer_text]" 
+                    class="form-control" placeholder="Tulis jawaban..." required>
+                <div class="input-group-text">
+                    <input type="checkbox" name="questions[${qIdx}][answers][${answerCount}][is_correct]" value="1"> Benar
+                </div>
+                <button type="button" class="btn btn-danger remove-answer"><i class="fa fa-times"></i></button>
+            </div>`;
+            
+            answersWrapper.append(aHtml);
+        });
 
-// Hapus jawaban
-$(document).on('click', '.remove-answer', function() {
-    $(this).closest('.input-group').remove();
-});
+        // Hapus jawaban
+        $(document).on('click', '.remove-answer', function() {
+            $(this).closest('.input-group').remove();
+        });
+
+        function toggleQuizWrapper() {
+            if ($('#type').val() === "{{ \App\Constants\GameStampType::PHOTO }}") {
+                $('.quiz-wrapper').hide();
+            } else {
+                $('.quiz-wrapper').show();
+            }
+        }
+
+        // cek pertama kali
+        toggleQuizWrapper();
+
+        // saat onchange
+        $('#type').on('change', toggleQuizWrapper);
+    });
 </script>
 @endpush
