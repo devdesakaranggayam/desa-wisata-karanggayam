@@ -24,9 +24,9 @@ class ExploreDetailResource extends JsonResource
         return [
             "id" => $this->id,
             "nama" => $this->nama,
-            "tipe" => $this->tipe,
+            "tipe" => $this->type,
             "deskripsi" => $this->deskripsi,
-            "thumbnail_url"=> $files[0]["file_url"] ?? $thumbnail[$this->tipe],
+            "thumbnail_url"=> $files[0]["file_url"] ?? $thumbnail[$this->type],
             "files" => $files,
             "lainnya" => $this->lainnya
         ];

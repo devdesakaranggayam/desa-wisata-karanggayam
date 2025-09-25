@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Wisata;
 use App\Models\Kesenian;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ class KesenianController extends Controller
 {
     public function index()
     {
-        $kesenian = Kesenian::with('files')->latest()->get();
+        $kesenian = Wisata::kesenian()->with('files')->latest()->get();
         return view('dashboard.kesenian.index', compact('kesenian'));
     }
 
@@ -28,7 +29,9 @@ class KesenianController extends Controller
             'deskripsi' => 'nullable|string',
         ]);
 
-        $kesenian = Kesenian::create($request->only(['nama', 'deskripsi']));
+        $data = $request->only(['nama', 'deskripsi']);
+        $data["type"] = "kesenian";
+        $kesenian = Wisata::create($data);
 
         if ($request->has('files')) {
             foreach ($request->input('files') as $index => $fileInput) {
@@ -52,13 +55,13 @@ class KesenianController extends Controller
 
     public function show($id)
     {
-        $kesenian = Kesenian::with('files')->findOrFail($id);
+        $kesenian = Wisata::with('files')->findOrFail($id);
         return view('dashboard.kesenian.detail', compact('kesenian'));
     }
 
     public function edit($id)
     {
-        $kesenian = Kesenian::with('files')->findOrFail($id);
+        $kesenian = Wisata::with('files')->findOrFail($id);
         return view('dashboard.kesenian.edit', compact('kesenian'));
     }
 
@@ -69,7 +72,7 @@ class KesenianController extends Controller
             'deskripsi' => 'nullable|string',
         ]);
 
-        $kesenian = Kesenian::findOrFail($id);
+        $kesenian = Wisata::findOrFail($id);
         $kesenian->update($request->only(['nama', 'deskripsi']));
 
         if ($request->has('files')) {
@@ -94,7 +97,7 @@ class KesenianController extends Controller
 
     public function destroy($id)
     {
-        $kesenian = Kesenian::with('files')->findOrFail($id);
+        $kesenian = Wisata::with('files')->findOrFail($id);
 
         // hapus file dari storage
         foreach ($kesenian->files as $file) {

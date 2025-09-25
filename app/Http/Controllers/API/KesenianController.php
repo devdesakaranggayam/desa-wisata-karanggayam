@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Wisata;
 use App\Models\Kesenian;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class KesenianController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Kesenian::with('files');
+        $query = Wisata::kesenian()->with('files');
 
         // search by nama
         if ($request->has('search')) {
@@ -37,20 +38,15 @@ class KesenianController extends Controller
         $perPage = $request->get('per_page', 10);
         $data = $query->paginate($perPage);
 
-        // tambahin type = "kesenian" di tiap item
-        $mapped = collect($data->items())->map(function ($item) {
-            $item->type = "kesenian";
-            return $item;
-        });
-        $result = ExploreResource::collection($mapped);
+        $result = ExploreResource::collection($data);
 
-        return ApiResponse::paginated($data, "Daftar kesenian berhasil diambil", $result);
+        return ApiResponse::paginated($result, "Daftar kesenian berhasil diambil");
     }
 
 
     public function show($id)
     {
-        $kesenian = Kesenian::with('files')->find($id);
+        $kesenian = Wisata::with('files')->find($id);
 
         if (!$kesenian) {
             return ApiResponse::error("Data kesenian tidak ditemukan", 404);
@@ -58,12 +54,11 @@ class KesenianController extends Controller
 
         // upsert stats
         $kesenian->stat()->updateOrCreate(
-            ['statable_id' => $kesenian->id, 'statable_type' => Kesenian::class],
+            ['statable_id' => $kesenian->id, 'statable_type' => Wisata::class],
             ['view_count' => \DB::raw('COALESCE(view_count, 0) + 1')]
         );
 
         $kesenian->lainnya = ExploreResource::collection(random_kesenian(8, $id));
-        $kesenian->tipe = "kesenian";
 
         return ApiResponse::success(new ExploreDetailResource($kesenian), "Detail kesenian berhasil diambil", 200);
     }

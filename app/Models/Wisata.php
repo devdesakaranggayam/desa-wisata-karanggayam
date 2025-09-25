@@ -20,4 +20,14 @@ class Wisata extends Model
     {
         return $this->morphOne(Stats::class, 'statable');
     }
+
+    public function scopeWisata($query)
+    {
+        return $query->where('type', 'wisata');
+    }
+
+    public function scopeKesenian($query)
+    {
+        return $query->where('type', 'kesenian');
+    }
 }

@@ -12,7 +12,7 @@ class WisataController extends Controller
 {
     public function index()
     {
-        $wisata = Wisata::with('files')->get();
+        $wisata = Wisata::wisata()->with('files')->get();
         return view('dashboard.wisata.index', compact('wisata'));
     }
 
@@ -27,8 +27,9 @@ class WisataController extends Controller
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
         ]);
-
-        $wisata = Wisata::create($request->only(['nama', 'deskripsi']));
+        $data = $request->only(['nama', 'deskripsi']);
+        $data['type'] = "wisata";
+        $wisata = Wisata::create($data);
 
         if ($request->has('files')) {
             foreach ($request->input('files') as $index => $fileInput) {
@@ -70,6 +71,7 @@ class WisataController extends Controller
         ]);
 
         $wisata = Wisata::findOrFail($id);
+        $wisata["tipe"] = "wisata";
         $wisata->update($request->only(['nama', 'deskripsi']));
 
         if ($request->has('files')) {
