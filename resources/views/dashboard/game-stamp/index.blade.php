@@ -19,6 +19,8 @@
                         <th>No</th>
                         <th>Nama</th>
                         <th>Icon</th>
+                        <th>Jenis</th>
+                        <th>Skor Minimum</th>
                         <th>Koordinat</th>
                         <th>Aksi</th>
                     </tr>
@@ -35,6 +37,8 @@
                                 <span class="badge bg-secondary">-</span>
                             @endif
                         </td>
+                        <td>{{ ucfirst($s->type) }}</td>
+                        <td>{{ $s->passing_score }}</td>
                         <td>({{ $s->x ?? '-' }}, {{ $s->y ?? '-' }})</td>
                         <td>
                             <a href="{{ route('game-stamps.edit',$s->id) }}" class="btn btn-sm btn-warning">
