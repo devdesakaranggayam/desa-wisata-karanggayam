@@ -21,15 +21,12 @@ class SearchController extends Controller
         $result = [];
         if (!$query) {
             $produk = random_produk(4);
-            $kesenian = random_kesenian(2);
-            $wisata = random_wisata(2);
+            $explore = Wisata::with('files')->inRandomOrder()->take(8)->get();
         } else {
+            $explore = search_wisata($query, null, $request->all());
             $produk = search_produk($query, null, $request->all());
-            $wisata = search_wisata($query, $request->all());
-            $kesenian = search_kesenian($query, $request->all());
         }
 
-        $explore = $kesenian->concat($wisata)->values();
         $result["explore"] = ExploreResource::collection($explore);
         $result["produk"] = ProdukResource::collection($produk);
 
@@ -38,53 +35,30 @@ class SearchController extends Controller
 
     public function detail(Request $request)
     {
-        $type = $request->tipe;
-        $id = $request->id;
-
-        $data = null;
-        if ($type == 'kesenian') {
-            $data = Kesenian::with('files')->find($id);
-            $data["lainnya"] = ExploreResource::collection(random_kesenian(8, $data->id));
-        } elseif ($type == 'wisata') {
-            $data = Wisata::with('files')->find($id);
-            $data["lainnya"] = ExploreResource::collection(random_wisata(8, $data->id));
-        }
-        $data["tipe"] = $type;
-
+        $data = Wisata::with('files')->findOrFail($request->id);
         return ApiResponse::success(new ExploreDetailResource($data), "", 200);
     }
 
     public function explore(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
         $tipe    = $request->input('tipe', 'all');
         $keyword = $request->input('keyword');
-        $limit   = $request->input('limit');   // opsional
-        $options = $request->except(['tipe', 'keyword', 'limit']); // biar bisa oper sorting dsb
 
-        // Mode pencarian
-        if ($keyword) {
-            $explore = match ($tipe) {
-                'kesenian' => search_kesenian($keyword, $limit, $options),
-                'wisata'   => search_wisata($keyword, $limit, $options),
-                default    => search_kesenian($keyword, $limit, $options)
-                                ->concat(search_wisata($keyword, $limit, $options))
-                                ->values(),
-            };
-        } 
-        // Mode random (tanpa keyword)
-        else {
-            $explore = match ($tipe) {
-                'kesenian' => random_kesenian($limit ?? 8),
-                'wisata'   => random_wisata($limit ?? 8),
-                default    => random_kesenian($limit ?? 4)
-                                ->concat(random_wisata($limit ?? 4))
-                                ->values(),
-            };
-        }
+        $query = Wisata::query()
+            ->when($tipe !== 'all', function ($q) use ($tipe) {
+                $q->where('type', $tipe);
+            })
+            ->when($keyword, function ($q) use ($keyword) {
+                $q->where('nama', 'like', "%{$keyword}%");
+            });
 
-        $result = ExploreResource::collection($explore);
+        $data = $query->paginate($perPage);
 
-        return ApiResponse::success($result, "", 200);
+        $result = ExploreResource::collection($data);
+
+        return ApiResponse::paginated($result, "");
     }
+
 
 }

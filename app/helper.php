@@ -366,12 +366,7 @@ if (! function_exists('search_wisata')) {
             $builder->orderBy($sortBy, $sortDir);
         }
 
-        $result = $limit ? $builder->limit($limit)->get() : $builder->get();
-
-        return $result->map(function ($item) {
-            $item->type = 'wisata';
-            return $item;
-        });
+        return $limit ? $builder->limit($limit)->get() : $builder->get();
     }
 }
 
