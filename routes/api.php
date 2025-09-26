@@ -37,7 +37,7 @@ Route::get('home', [HomeController::class, 'index']);
 Route::get('wisata/{id}', [WisataController::class, 'show'])->name('api.wisata.show');
 
 // Protected routes
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth.api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('profile', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
@@ -49,6 +49,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('update-profile', [UserController::class, 'updateProfile']);
         Route::post('update-profile-picture', [UserController::class, 'updateProfilePicture']);
     });
+
+    Route::get('game-stamps', [GameStampController::class, 'index']);
+    Route::post('user-stamps', [GameStampController::class, 'createUserStamp']);
 });
 
-Route::get('game-stamps', [GameStampController::class, 'index']);
