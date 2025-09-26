@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ProdukController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\WisataController;
 use App\Http\Controllers\API\KesenianController;
+use App\Http\Controllers\API\GameStampController;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -49,3 +50,5 @@ Route::middleware('auth:api')->group(function () {
         Route::post('update-profile-picture', [UserController::class, 'updateProfilePicture']);
     });
 });
+
+Route::get('game-stamps', [GameStampController::class, 'index']);
