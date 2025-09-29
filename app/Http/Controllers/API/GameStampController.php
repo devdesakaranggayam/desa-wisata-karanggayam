@@ -7,27 +7,24 @@ use App\Models\UserStamp;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GameResource;
 use App\Http\Resources\GameStampResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\GameDetailResource;
 
 class GameStampController extends Controller
 {
     public function index(Request $request)
     {
-        $data = GameStamp::get([
-            'id',
-            'nama',
-            'type',
-            'passing_score',
-            'nama',
-            'x',
-            'y',
-            'icon_path',
-        ]);
-
-        return ApiResponse::success($data,'');
+        $data = GameStamp::all();
+        return ApiResponse::success(GameResource::collection($data));
     }
 
+    public function show(Request $request, $id)
+    {
+        $data = GameStamp::with('questions.answers')->where('id', $id)->first();
+        return ApiResponse::success(new GameDetailResource($data));
+    }
 
     public function createUserStamp(Request $request)
     {
@@ -53,5 +50,6 @@ class GameStampController extends Controller
 
         return ApiResponse::success($userStamp, 'Stamp berhasil ditambahkan');
     }
+
 
 }

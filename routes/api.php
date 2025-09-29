@@ -51,6 +51,7 @@ Route::middleware('auth.api')->group(function () {
     });
 
     Route::get('game-stamps', [GameStampController::class, 'index']);
+    Route::get('game-stamps/{id}', [GameStampController::class, 'show']);
     Route::post('user-stamps', [GameStampController::class, 'createUserStamp']);
 });
 
