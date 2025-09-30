@@ -428,7 +428,7 @@ if (! function_exists('get_claimable_reward')) {
         $claimed = UserHadiah::whereDate('created_at', Carbon::today())->pluck('id')->toArray();
 
         return Hadiah::with('thumbnail')
-            ->where('min_stamp', '>=', $userStampCount)
+            ->where('min_stamp', '<=', $userStampCount)
             ->whereNotIn('id', $claimed)
             ->get();
     }
