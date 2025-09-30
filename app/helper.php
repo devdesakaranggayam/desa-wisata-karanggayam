@@ -2,9 +2,14 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Hadiah;
 use App\Models\Produk;
 use App\Models\Wisata;
 use App\Models\Kesenian;
+use App\Models\GameStamp;
+use App\Models\UserStamp;
+use App\Models\UserHadiah;
+use App\Http\Resources\UserStampList;
 use Illuminate\Support\Facades\Route;
 
 if (!function_exists('is_active_sidebar')) {
@@ -395,5 +400,36 @@ if (! function_exists('normalize_hp')) {
         }
 
         return $noHp;
+    }
+}
+
+if (! function_exists('get_user_stamp')) {
+    function get_user_stamp($userId) {
+        $data = UserStamp::where('user_id', $userId)
+            ->whereDate('created_at', Carbon::today())
+            ->with('gameStamp')
+            ->get();
+        $gameStampCount = GameStamp::count();
+        $userStampCount = $data->sum('jumlah_stamp');
+        return [
+            "stamp_count" => [
+                "total_stamp" => $gameStampCount,
+                "user_stamp" => $userStampCount
+            ],
+            "stamp_list" => UserStampList::collection($data)
+        ];
+    }
+}
+
+if (! function_exists('get_claimable_reward')) {
+    function get_claimable_reward($userId) {
+        $data = get_user_stamp($userId);
+        $userStampCount = $data["stamp_count"]["user_stamp"];
+        $claimed = UserHadiah::whereDate('created_at', Carbon::today())->pluck('id')->toArray();
+
+        return Hadiah::with('thumbnail')
+            ->where('min_stamp', '>=', $userStampCount)
+            ->whereNotIn('id', $claimed)
+            ->get();
     }
 }

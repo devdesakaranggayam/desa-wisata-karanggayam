@@ -22,23 +22,6 @@ class GameStampController extends Controller
         return ApiResponse::success(GameResource::collection($data));
     }
 
-    private function getUserStampData($userId)
-    {
-        $data = UserStamp::where('user_id', $userId)
-            ->whereDate('created_at', Carbon::today())
-            ->with('gameStamp')
-            ->get();
-        $gameStampCount = GameStamp::count();
-        $userStampCount = $data->sum('jumlah_stamp');
-        return [
-            "stamp_count" => [
-                "total_stamp" => $gameStampCount,
-                "user_stamp" => $userStampCount
-            ],
-            "stamp_list" => UserStampList::collection($data)
-        ];
-    }
-
     public function show(Request $request, $id)
     {
         $data = GameStamp::with('questions.answers')->where('id', $id)->first();
@@ -74,7 +57,7 @@ class GameStampController extends Controller
             'jumlah_stamp'  => 1
         ]);
 
-        $data = $this->getUserStampData($user->id);
+        $data = get_user_stamp($user->id);
 
         return ApiResponse::success($data, 'Stamp berhasil ditambahkan');
     }
@@ -82,7 +65,7 @@ class GameStampController extends Controller
     public function getUserStamps(Request $request)
     {
         $user = auth('api')->user();
-        $data = $this->getUserStampData($user->id);
+        $data = get_user_stamp($user->id);
         return ApiResponse::success($data, 'Stamp berhasil ditambahkan');
     }
 }

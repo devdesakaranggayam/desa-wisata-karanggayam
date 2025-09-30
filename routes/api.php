@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\TokoController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\HadiahController;
 use App\Http\Controllers\API\ProdukController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\WisataController;
@@ -54,5 +55,7 @@ Route::middleware('auth.api')->group(function () {
     Route::get('game-stamps/{id}', [GameStampController::class, 'show']);
     Route::get('user-stamps', [GameStampController::class, 'getUserStamps']);
     Route::post('user-stamps', [GameStampController::class, 'createUserStamp']);
+    Route::get('hadiah', [HadiahController::class, 'userHadiah']);
+    Route::post('hadiah/klaim', [HadiahController::class, 'klaimHadiah']);
 });
 
