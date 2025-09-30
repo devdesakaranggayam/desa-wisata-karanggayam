@@ -35,8 +35,6 @@ class GameStampController extends Controller
         $request->validate([
             'nama'                   => 'required|string|max:255',
             'icon_path'              => 'required|image|mimes:png,jpg,jpeg,svg',
-            'x'                      => 'required|integer',
-            'y'                      => 'required|integer',
             'questions.*.question_text'         => 'required|string',
             'questions.*.thumbnail_path'        => 'required|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
@@ -52,8 +50,8 @@ class GameStampController extends Controller
         $gameStamp = GameStamp::create([
             'nama' => $request->nama,
             'icon_path' => $iconPath,
-            'x' => $request->x,
-            'y' => $request->y,
+            'x' => $request->x ?? 0,
+            'y' => $request->y ?? 0,
             'type' => $request->type,
             'passing_score' => $request->passing_score
         ]);
@@ -97,8 +95,6 @@ class GameStampController extends Controller
         $request->validate([
             'nama'                   => 'required|string|max:255',
             'icon_path'              => 'nullable|image|mimes:png,jpg,jpeg,svg',
-            'x'                      => 'required|integer',
-            'y'                      => 'required|integer',
             'questions.*.question_text'         => 'required|string',
             'questions.*.thumbnail_path'        => 'nullable|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
@@ -117,8 +113,6 @@ class GameStampController extends Controller
         }
 
         $gameStamp->nama = $request->nama;
-        $gameStamp->x = $request->x;
-        $gameStamp->y = $request->y;
         $gameStamp->type = $request->type;
         $gameStamp->passing_score = $request->passing_score;
         

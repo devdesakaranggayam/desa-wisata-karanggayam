@@ -49,19 +49,20 @@
                             required>
                     </div>
 
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="x" class="form-label">Koordinat X</label>
-                            <input type="number" name="x" class="form-control" 
-                                   value="{{ old('x', $gameStamp->x) }}" required>
+                    {{-- 
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="x" class="form-label">Koordinat X</label>
+                                <input type="number" name="x" class="form-control" 
+                                       value="{{ old('x', $gameStamp->x) }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="y" class="form-label">Koordinat Y</label>
+                                <input type="number" name="y" class="form-control" 
+                                       value="{{ old('y', $gameStamp->y) }}" required>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="y" class="form-label">Koordinat Y</label>
-                            <input type="number" name="y" class="form-control" 
-                                   value="{{ old('y', $gameStamp->y) }}" required>
-                        </div>
-                    </div>
+                    --}}
                     
                     <div class="quiz-wrapper"
                         style="{{ $gameStamp->type == \App\Constants\GameStampType::QUIZ ? '' : 'display: none;' }}">

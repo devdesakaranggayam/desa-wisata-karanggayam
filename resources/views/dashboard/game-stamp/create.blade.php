@@ -21,29 +21,35 @@
                         <label for="icon_path" class="form-label">Icon</label>
                         <input type="file" name="icon_path" class="form-control" accept="image/*" required>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="type" class="form-label">Tipe Stamp</label>
-                        <select name="type" id="type" class="form-control" required>
-                            @foreach ($types as $type)
-                                <option value="{{ $type }}">{{ ucfirst($type) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="passing_score" class="form-label">Skor Minimum</label>
-                        <input type="number" name="passing_score" class="form-control" required>
-                    </div>
                     <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Tipe Stamp</label>
+                                <select name="type" id="type" class="form-control" required>
+                                    @foreach ($types as $type)
+                                        <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="passing_score" class="form-label">Skor Minimum</label>
+                                <input type="number" name="passing_score" class="form-control" required>
+                                <small class="text-muted">Jumlah minimal jawaban benar untuk mendapatkan stamp</small> 
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="x" class="form-label">Koordinat X</label>
-                            <input type="number" name="x" class="form-control" required>
+                            <input type="number" name="x" class="form-control" value="0" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="y" class="form-label">Koordinat Y</label>
-                            <input type="number" name="y" class="form-control" required>
+                            <input type="number" name="y" class="form-control" value="0" required>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="quiz-wrapper">
                         <hr>

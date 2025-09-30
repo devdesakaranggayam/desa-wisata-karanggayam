@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HadiahController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\WisataController;
 use App\Http\Controllers\CarouselController;
@@ -38,6 +39,7 @@ Route::prefix('dashboard')->group(function () {
             Route::resource('admin', ManageAdminController::class);
         });
 
+        Route::resource('hadiah', HadiahController::class);
         Route::resource('produk', ProdukController::class);
         Route::resource('carousel', CarouselController::class)->except([
             'create', 'destroy'

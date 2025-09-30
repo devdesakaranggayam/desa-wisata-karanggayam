@@ -142,6 +142,9 @@
                 </li>
             </ul>
         </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Game</span>
+        </li>
         @if(is_dev())
         <li class="menu-item 
             {{is_active_sidebar([
@@ -157,5 +160,19 @@
             </a>
         </li>
         @endif
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'hadiah.index',
+                'hadiah.create',
+                'hadiah.edit',
+            ])}}"
+        >
+            <a href="{{route('hadiah.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-gift"></i>
+
+                <div data-i18n="Kesenian">Hadiah</div>
+            </a>
+        </li>
+        
     </ul>
 </aside>
