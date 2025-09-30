@@ -16,6 +16,7 @@ class HadiahResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            "nama" => $this->nama,
             "deskripsi" => $this->deskripsi,
             "min_stamp" => $this->min_stamp,
             "thumbnail_url" => $this->thumbnail->file_url,
