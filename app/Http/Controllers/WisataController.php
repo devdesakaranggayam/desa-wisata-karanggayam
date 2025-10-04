@@ -71,7 +71,7 @@ class WisataController extends Controller
         ]);
 
         $wisata = Wisata::findOrFail($id);
-        $wisata["tipe"] = "wisata";
+        $wisata["type"] = "wisata";
         $wisata->update($request->only(['nama', 'deskripsi']));
 
         if ($request->has('files')) {
