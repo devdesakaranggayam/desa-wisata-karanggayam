@@ -9,6 +9,7 @@ use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GameResource;
+use Illuminate\Support\Facades\Http;
 use App\Http\Resources\UserStampList;
 use App\Http\Resources\GameStampResource;
 use Illuminate\Support\Facades\Validator;
@@ -67,5 +68,20 @@ class GameStampController extends Controller
         $user = auth('api')->user();
         $data = get_user_stamp($user->id);
         return ApiResponse::success($data, 'Stamp berhasil ditambahkan');
+    }
+
+    public function checkGapuraImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image'
+        ]);
+
+        $response = Http::attach(
+            'file',
+            file_get_contents($request->file('image')),
+            $request->file('image')->getClientOriginalName()
+        )->post('http://127.0.0.1:8001/check-similarity');
+
+        return $response->json();
     }
 }

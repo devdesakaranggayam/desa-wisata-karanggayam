@@ -22,3 +22,31 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# --- FastAPI / Python ---
+fastapi/venv/
+fastapi/__pycache__/
+fastapi/**/*.pyc
+fastapi/**/*.pyo
+fastapi/**/*.pyd
+fastapi/.pytest_cache/
+fastapi/.mypy_cache/
+fastapi/.ruff_cache/
+fastapi/.coverage
+fastapi/coverage.xml
+fastapi/htmlcov/
+fastapi/.DS_Store
+
+# VSCode config (kalau ada)
+fastapi/.vscode/
+
+# log files
+fastapi/*.log
+
+# Jupyter notebooks (kalau iseng pakai)
+fastapi/.ipynb_checkpoints/
+
+# build / dist (kalau bikin package)
+fastapi/build/
+fastapi/dist/
+fastapi/*.egg-info/

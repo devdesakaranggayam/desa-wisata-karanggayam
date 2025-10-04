@@ -57,5 +57,5 @@ Route::middleware('auth.api')->group(function () {
     Route::post('user-stamps', [GameStampController::class, 'createUserStamp']);
     Route::get('hadiah', [HadiahController::class, 'userHadiah']);
     Route::post('hadiah/klaim', [HadiahController::class, 'klaimHadiah']);
+    Route::post('image-check', [GameStampController::class, 'checkGapuraImage']);
 });
-
