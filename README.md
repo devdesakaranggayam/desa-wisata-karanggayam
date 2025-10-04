@@ -1,61 +1,164 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Desa Wisata Karanggayam - Deployment Guide
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Proyek ini menggunakan **Laravel** (PHP) untuk aplikasi utama, dan **FastAPI** (Python) untuk layanan pengecekan gambar gapura.  
+Dokumen ini menjelaskan cara deploy keduanya di server **Debian/Ubuntu**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Prasyarat Server
+- Debian/Ubuntu 22.04+
+- Nginx
+- PHP 8.2+
+- Composer
+- MySQL
+- Python 3.11+ (virtualenv)
+- Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 1. Clone Project
+```bash
+cd /var/www
+git clone https://github.com/devdesakaranggayam/desa-wisata-karanggayam.git
+cd desa-wisata-karanggayam
+````
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ⚙️ 2. Deploy Laravel
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Install Dependencies
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+cd desa-wisata-karanggayam
+composer install --no-dev --optimize-autoloader
+cp .env.example .env
+php artisan key:generate
+```
 
-## Laravel Sponsors
+### Set Permissions
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+chown -R www-data:www-data /var/www/desa-wisata-karanggayam/laravel-app/storage /var/www/desa-wisata-karanggayam/laravel-app/bootstrap/cache
+chmod -R 775 /var/www/desa-wisata-karanggayam/laravel-app/storage /var/www/desa-wisata-karanggayam/laravel-app/bootstrap/cache
+```
 
-### Premium Partners
+### Database Migration
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan migrate --force
+```
 
-## Contributing
+### Configure Web Server (Apache/Nginx)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🤖 3. Deploy FastAPI
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Install Python Virtualenv
 
-## Security Vulnerabilities
+```bash
+cd /var/www/desa-wisata-karanggayam/fastapi
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Test Run Manual
 
-## License
+```bash
+venv/bin/uvicorn main:app --host 127.0.0.1 --port 8001
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Systemd Service
+
+File: `/etc/systemd/system/fastapi.service`
+
+```ini
+[Unit]
+Description=FastAPI Application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/desa-wisata-karanggayam/fastapi
+ExecStart=/var/www/desa-wisata-karanggayam/fastapi/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8001 --workers 2
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Aktifkan service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable fastapi
+sudo systemctl start fastapi
+sudo systemctl status fastapi
+```
+
+---
+
+## 🔄 4. Integrasi Laravel ↔ FastAPI
+
+* FastAPI berjalan di `http://127.0.0.1:8001`
+* Laravel dapat memanggil FastAPI via HTTP request (misalnya pakai `Http::post()`)
+
+Contoh:
+
+```php
+$response = Http::post('http://127.0.0.1:8001/check-similarity', [
+    'file' => $imagePath,
+]);
+```
+
+---
+
+## 📂 Struktur Direktori
+
+```
+desa-wisata-karanggayam/
+├── app
+├── bootstrap
+├── ...
+├── fastapi/       # Service FastAPI (AI/ML)
+│   ├── venv/      # Virtualenv Python
+│   ├── main.py    # Entry point FastAPI
+│   ├── requirements.txt
+│   └── ...
+```
+
+---
+
+## ✅ Maintenance
+### Restart FastAPI
+
+```bash
+sudo systemctl restart fastapi
+```
+
+### Logs
+
+```bash
+# Laravel
+tail -f laravel-app/storage/logs/laravel.log
+
+# FastAPI
+journalctl -u fastapi -f
+```
+
+---
+
+## 🛡️ Security Notes
+
+* Jalankan FastAPI hanya di `127.0.0.1`, tidak di `0.0.0.0`
+* Gunakan HTTPS di Web server
+* Update paket server secara berkala
+
+---
+
+## Selesai
+
+Sekarang aplikasi **Laravel + FastAPI** sudah jalan otomatis di server
