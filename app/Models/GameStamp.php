@@ -30,4 +30,9 @@ class GameStamp extends Model
         $baseUrl = config('app.url');
         return $baseUrl . \Storage::url($this->icon_path);
     }
+
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
 }

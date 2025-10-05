@@ -23,6 +23,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('kesenian/{kesenian}/file/{file}', [KesenianController::class, 'removeFile'])->name('kesenian.removeFile');
     Route::delete('produk/{produk}/file/{file}', [ProdukController::class, 'removeFile'])->name('produk.removeFile');
     Route::delete('/carousel/{carousel}/file/{file}', [CarouselController::class, 'destroyFile'])->name('carousel.file.destroy');
+    Route::delete('game-stamps/{game}/file/{file}', [GameStampController::class, 'destroyFile'])->name('game-stamps.file.destroy');
 });
 
 Route::prefix('dashboard')->group(function () {

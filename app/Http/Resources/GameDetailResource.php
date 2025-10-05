@@ -26,6 +26,9 @@ class GameDetailResource extends JsonResource
                 'answers' => $answer
             ];
         });
+
+        $files = map_files($this->files);
+        
         
         return [
             "id" => $this->id,
@@ -33,7 +36,8 @@ class GameDetailResource extends JsonResource
             "type" => $this->type,
             "min_correct_answer" => $this->passing_score,
             "icon_url" => $this->icon_url,
-            "questions" => $questions
+            "questions" => $questions,
+            "foto" => $files
         ];
     }
 }

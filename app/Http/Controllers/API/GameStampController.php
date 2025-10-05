@@ -19,7 +19,7 @@ class GameStampController extends Controller
 {
     public function index(Request $request)
     {
-        $data = GameStamp::all();
+        $data = GameStamp::with('files')->get();
         return ApiResponse::success(GameResource::collection($data));
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Storage;
+use App\Models\File;
 use App\Models\Question;
 use App\Models\GameStamp;
 use Illuminate\Support\Str;
@@ -55,6 +56,23 @@ class GameStampController extends Controller
             'type' => $request->type,
             'passing_score' => $request->passing_score
         ]);
+
+
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('game', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $gameStamp->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
+            }
+        }
 
         // Simpan pertanyaan + jawaban
         if ($request->has('questions')) {
@@ -117,6 +135,22 @@ class GameStampController extends Controller
         $gameStamp->passing_score = $request->passing_score;
         
         $gameStamp->save();
+
+        if ($request->has('files')) {
+            foreach ($request->input('files') as $index => $fileInput) {
+                $uploadedFile = $request->file("files.$index.file");
+                if ($uploadedFile) {
+                    $path = $uploadedFile->store('game', 'public');
+                    $ext = $uploadedFile->getClientOriginalExtension();
+                    $gameStamp->files()->create([
+                        'nama'      => Str::random(20) . '.' . $ext,
+                        'path'      => $path,
+                        'tipe_file' => $uploadedFile->getClientMimeType(),
+                        'urutan'    => $fileInput['urutan'] ?? $index,
+                    ]);
+                }
+            }
+        }
 
         // update atau sync berdasarkan 'id'
         if ($request->has('questions')) {
@@ -212,4 +246,22 @@ class GameStampController extends Controller
                         ->with('success', 'Game stamp beserta pertanyaan & jawaban berhasil dihapus.');
     }
 
+
+    public function destroyFile(GameStamp $game, File $file)
+    {
+        // cek kalau file memang milik game ini
+        if ($file->fileable_id !== $game->id) {
+            return response()->json(["success" => false], 404);
+        }
+
+        // hapus dari storage publik
+        if (\Storage::disk('public')->exists($file->path)) {
+            \Storage::disk('public')->delete($file->path);
+        }
+
+        // hapus record
+        $file->delete();
+
+        return response()->json(["success" => true], 200);
+    }
 }

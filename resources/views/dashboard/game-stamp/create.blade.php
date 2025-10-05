@@ -51,6 +51,26 @@
                         </div>
                     </div> --}}
 
+                    <div class="mb-3 type-foto" style="display:none;">
+                        <label class="form-label" for="file-wrapper">Tambah File</label>
+                        <div id="file-wrapper">
+                            <div class="file-group mb-3 row">
+                                <div class="col-md-4">
+                                    <input type="file" name="files[0][file]" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="files[0][urutan]" class="form-control" placeholder="Urutan">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-file" class="btn btn-success btn-sm">
+                            <i class="fa fa-plus"></i> Tambah File
+                        </button>
+                    </div>
+
                     <div class="quiz-wrapper">
                         <hr>
                         <h5>Daftar Pertanyaan</h5>
@@ -141,8 +161,10 @@
         function toggleQuizWrapper() {
             if ($('#type').val() === "{{ \App\Constants\GameStampType::PHOTO }}") {
                 $('.quiz-wrapper').hide();
+                $('.type-foto').show();
             } else {
                 $('.quiz-wrapper').show();
+                $('.type-foto').hide();
             }
         }
 
@@ -153,4 +175,33 @@
         $('#type').on('change', toggleQuizWrapper);
     });
 </script>
+
+<script>
+    let fileIndex = 1;
+
+    // Tambah input file baru
+    $('#add-file').on('click', function () {
+        $('#file-wrapper').append(`
+            <div class="file-group mb-3 row">
+                <div class="col-md-4">
+                    <input type="file" name="files[${fileIndex}][file]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="files[${fileIndex}][urutan]" class="form-control" placeholder="Urutan">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger remove-file"><i class="fa fa-trash"></i></button>
+                </div>
+            </div>
+        `);
+        fileIndex++;
+    });
+
+    // Hapus input file baru
+    $(document).on('click', '.remove-file', function () {
+        $(this).closest('.file-group').remove();
+    });
+
+</script>
+
 @endpush
