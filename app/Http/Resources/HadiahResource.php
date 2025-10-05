@@ -19,7 +19,8 @@ class HadiahResource extends JsonResource
             "nama" => $this->nama,
             "deskripsi" => $this->deskripsi,
             "min_stamp" => $this->min_stamp,
-            "thumbnail_url" => $this->thumbnail->file_url,
+            "user_stamp" => $this->user_stamp,
+            "thumbnail_url" => $this->thumbnail->file_url ?? null,
             "is_claimed" => $this->is_claimed
         ];
     }

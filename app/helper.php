@@ -446,12 +446,12 @@ if (! function_exists('get_user_reward')) {
 
         // get all hadiah that meet stamp requirement
         $hadiahList = Hadiah::with('thumbnail')
-            ->where('min_stamp', '<=', $userStampCount)
             ->get();
 
         // append is_claimed flag
-        return $hadiahList->map(function ($hadiah) use ($claimed) {
+        return $hadiahList->map(function ($hadiah) use ($claimed, $userStampCount) {
             $hadiah->is_claimed = in_array($hadiah->id, $claimed);
+            $hadiah->user_stamp = $userStampCount;
             return $hadiah;
         });
     }
