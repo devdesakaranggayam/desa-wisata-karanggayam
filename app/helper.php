@@ -433,3 +433,26 @@ if (! function_exists('get_claimable_reward')) {
             ->get();
     }
 }
+
+if (! function_exists('get_user_reward')) {
+    function get_user_reward($userId) {
+        $data = get_user_stamp($userId);
+        $userStampCount = $data["stamp_count"]["user_stamp"];
+
+        // get claimed hadiah IDs for today
+        $claimed = UserHadiah::whereDate('created_at', Carbon::today())
+            ->pluck('hadiah_id') // changed from id → hadiah_id
+            ->toArray();
+
+        // get all hadiah that meet stamp requirement
+        $hadiahList = Hadiah::with('thumbnail')
+            ->where('min_stamp', '<=', $userStampCount)
+            ->get();
+
+        // append is_claimed flag
+        return $hadiahList->map(function ($hadiah) use ($claimed) {
+            $hadiah->is_claimed = in_array($hadiah->id, $claimed);
+            return $hadiah;
+        });
+    }
+}

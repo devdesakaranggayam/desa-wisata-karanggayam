@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
     public function getProfilePicUrlAttribute()
     {
         if (!$this->profile_pic) {
-            return null;
+            return asset('img/user.png');
         }
 
         // Ambil base URL dari APP_URL .env

@@ -37,7 +37,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
-            'nomor_hp' => 'sometimes|string|max:20',
+            'nomor_hp' => 'sometimes|string|max:20|unique:users,nomor_hp,' . $user->id,
         ]);
 
         if ($validator->fails()) {

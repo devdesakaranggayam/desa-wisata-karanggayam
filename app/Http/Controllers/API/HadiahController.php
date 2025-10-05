@@ -15,7 +15,7 @@ class HadiahController extends Controller
     public function userHadiah(Request $request)
     {
         $user = auth('api')->user();
-        $hadiah = get_claimable_reward($user->id);
+        $hadiah = get_user_reward($user->id);
 
         return ApiResponse::success(HadiahResource::collection($hadiah));
     }
