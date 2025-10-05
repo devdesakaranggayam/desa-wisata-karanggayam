@@ -18,7 +18,8 @@ class UserStampList extends JsonResource
         return [
             "id" => $gameStamp->id,
             "nama" => $gameStamp->nama,
-            "icon_url" => $gameStamp->icon_url
+            "icon_url" => $gameStamp->icon_url,
+            "deskripsi" => $gameStamp->deskripsi
         ];
     }
 }

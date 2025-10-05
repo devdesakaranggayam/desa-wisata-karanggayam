@@ -54,7 +54,8 @@ class GameStampController extends Controller
             'x' => $request->x ?? 0,
             'y' => $request->y ?? 0,
             'type' => $request->type,
-            'passing_score' => $request->passing_score
+            'passing_score' => $request->passing_score,
+            'deskripsi' => $request->deskripsi,
         ]);
 
 
@@ -130,6 +131,7 @@ class GameStampController extends Controller
             $gameStamp->icon_path = $iconPath;
         }
 
+        $gameStamp->deskripsi = $request->deskripsi;
         $gameStamp->nama = $request->nama;
         $gameStamp->type = $request->type;
         $gameStamp->passing_score = $request->passing_score;

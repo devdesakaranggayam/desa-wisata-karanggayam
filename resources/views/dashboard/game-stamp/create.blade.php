@@ -21,6 +21,12 @@
                         <label for="icon_path" class="form-label">Icon</label>
                         <input type="file" name="icon_path" class="form-control" accept="image/*" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="deskripsi" class="form-label">Detail Stamp</label>
+                        <textarea class="summernote" name="deskripsi" id="deskripsi"></textarea>
+                    </div>
+                    
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="mb-3">
