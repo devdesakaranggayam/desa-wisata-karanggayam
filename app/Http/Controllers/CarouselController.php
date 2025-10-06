@@ -75,21 +75,37 @@ class CarouselController extends Controller
         ]);
 
         if ($request->has('files')) {
+            // Hapus semua file lama dulu
+            if ($carousel->identifier == "home_banner") {
+                foreach ($carousel->files as $oldFile) {
+                    // Hapus file fisik di storage/public
+                    if (Storage::disk('public')->exists($oldFile->path)) {
+                        Storage::disk('public')->delete($oldFile->path);
+                    }
+    
+                    // Hapus record di database
+                    $oldFile->delete();
+                }
+            }
+
+            // Simpan file baru
             foreach ($request->input('files') as $index => $fileInput) {
                 $uploadedFile = $request->file("files.$index.file");
                 if ($uploadedFile) {
                     $path = $uploadedFile->store('carousels', 'public');
                     $ext = $uploadedFile->getClientOriginalExtension();
+
                     $carousel->files()->create([
                         'nama'      => Str::random(20) . '.' . $ext,
                         'path'      => $path,
                         'tipe_file' => $uploadedFile->getClientMimeType(),
                         'urutan'    => $fileInput['urutan'] ?? $index,
-                        'produk_id'    => $fileInput['produk_id'] ?? null,
+                        'produk_id' => $fileInput['produk_id'] ?? null,
                     ]);
                 }
             }
         }
+
 
 
         return redirect()->route('carousel.index')->with('success', 'Carousel berhasil diperbarui.');

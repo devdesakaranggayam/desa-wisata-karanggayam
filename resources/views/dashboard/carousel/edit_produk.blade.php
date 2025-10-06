@@ -60,7 +60,7 @@
                         <div id="file-wrapper">
                             <div class="file-group mb-3 row">
                                 <div class="col-md-4">
-                                    <input type="file" name="files[0][file]" class="form-control">
+                                    <input required type="file" name="files[0][file]" class="form-control">
                                 </div>
                                 <div class="col-md-3">
                                     <input type="number" name="files[0][urutan]" class="form-control" placeholder="Urutan">
@@ -138,7 +138,7 @@
         $('#file-wrapper').append(`
             <div class="file-group mb-3 row">
                 <div class="col-md-4">
-                    <input type="file" name="files[\${fileIndex}][file]" class="form-control">
+                    <input type="file" required name="files[\${fileIndex}][file]" class="form-control">
                 </div>
                 <div class="col-md-3">
                     <input type="number" name="files[\${fileIndex}][urutan]" class="form-control" placeholder="Urutan">

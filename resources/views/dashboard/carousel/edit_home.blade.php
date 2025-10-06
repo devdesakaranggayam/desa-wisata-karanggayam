@@ -35,9 +35,10 @@
                     {{-- Upload Baru --}}
                     <div class="mb-3">
                         <label class="form-label">Upload File Baru</label>
-                        <input type="file" name="file" class="form-control mb-2">
+                        
+                        <input type="file" required name="files[0][file]" class="form-control mb-2">
 
-                        <input type="hidden" name="urutan" class="form-control" value="{{ old('urutan', $carousel->files->first()->urutan ?? 0) }}">
+                        <input type="hidden" name="files[0][urutan]" class="form-control" value="{{ old('urutan', $carousel->files->first()->urutan ?? 0) }}">
                         <small class="text-muted d-block mt-2">File baru akan menggantikan file lama jika diisi.</small>
                     </div>
 
