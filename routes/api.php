@@ -12,6 +12,25 @@ use App\Http\Controllers\API\WisataController;
 use App\Http\Controllers\API\KesenianController;
 use App\Http\Controllers\API\GameStampController;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+
+Route::get('/models/{filename}', function ($filename) {
+    $path = public_path('storage/models/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    // Tentukan MIME type agar ModelViewer bisa membaca
+    $mime = mime_content_type($path);
+
+    return response()->file($path, [
+        'Content-Type' => $mime,
+        'Access-Control-Allow-Origin' => '*', // penting untuk Flutter web
+    ]);
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
