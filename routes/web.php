@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HadiahController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\WisataController;
+use App\Http\Controllers\ArObjectController;
 use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\KesenianController;
 use App\Http\Controllers\AdminAuthController;
@@ -24,10 +25,14 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('produk/{produk}/file/{file}', [ProdukController::class, 'removeFile'])->name('produk.removeFile');
     Route::delete('/carousel/{carousel}/file/{file}', [CarouselController::class, 'destroyFile'])->name('carousel.file.destroy');
     Route::delete('game-stamps/{game}/file/{file}', [GameStampController::class, 'destroyFile'])->name('game-stamps.file.destroy');
+    Route::delete('/arobject/{id}/remove-file', [ArObjectController::class, 'removeFile'])->name('arobject.removeFile');
 });
 
 Route::prefix('dashboard')->group(function () {
     Route::middleware('auth:admin')->group(function () {
+        Route::get('arobject/{id}/qr', [ArObjectController::class, 'showQr'])->name('arobject.qr');
+        Route::resource('arobject', ArObjectController::class)->except([]);
+
         Route::get('index', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('wisata', WisataController::class);
         Route::resource('kesenian', KesenianController::class);
