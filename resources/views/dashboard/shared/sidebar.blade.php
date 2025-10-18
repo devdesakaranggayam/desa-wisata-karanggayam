@@ -83,7 +83,18 @@
                 <div data-i18n="Toko">Toko</div>
             </a>
         </li>
-
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'arobject.index',
+                'arobject.create',
+                'arobject.edit',
+            ])}}"
+        >
+            <a href="{{route('arobject.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-vr-cardboard"></i>
+                <div data-i18n="ArObject">Objek AR</div>
+            </a>
+        </li>
         <li class="menu-item 
             {{is_active_sidebar([
                 'carousel.index',
@@ -173,19 +184,5 @@
                 <div data-i18n="Kesenian">Hadiah</div>
             </a>
         </li>
-        <li class="menu-item 
-            {{is_active_sidebar([
-                'arobject.index',
-                'arobject.create',
-                'arobject.edit',
-            ])}}"
-        >
-            <a href="{{route('arobject.index')}}" class="menu-link">
-                <i class="menu-icon tf-icons fa-solid fa-gift"></i>
-
-                <div data-i18n="ArObject">Objek AR</div>
-            </a>
-        </li>
-        
     </ul>
 </aside>
