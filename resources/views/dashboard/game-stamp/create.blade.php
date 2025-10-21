@@ -18,8 +18,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="icon_path" class="form-label">Icon</label>
+                        <label for="icon_path" class="form-label">Icon Map</label>
                         <input type="file" name="icon_path" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="icon_stamp_path" class="form-label">Icon Stamp</label>
+                        <input type="file" name="icon_stamp_path" class="form-control" accept="image/*" required>
                     </div>
 
                     <div class="mb-3">

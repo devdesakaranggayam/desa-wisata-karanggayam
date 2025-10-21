@@ -36,6 +36,7 @@ class GameStampController extends Controller
         $request->validate([
             'nama'                   => 'required|string|max:255',
             'icon_path'              => 'required|image|mimes:png,jpg,jpeg,svg',
+            'icon_stamp_path'              => 'required|image|mimes:png,jpg,jpeg,svg',
             'questions.*.question_text'         => 'required|string',
             'questions.*.thumbnail_path'        => 'required|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
@@ -46,11 +47,16 @@ class GameStampController extends Controller
         $iconFile = $request->file('icon_path');
         $iconName = Str::random(10) . '.' . $iconFile->getClientOriginalExtension();
         $iconPath = $iconFile->storeAs('game/icons', $iconName, 'public');
+        // Upload icon
+        $iconFileStamp = $request->file('icon_stamp_path');
+        $iconNameStamp = Str::random(10) . '.' . $iconFileStamp->getClientOriginalExtension();
+        $iconPathStamp = $iconFileStamp->storeAs('game/icons', $iconNameStamp, 'public');
 
         // Simpan GameStamp
         $gameStamp = GameStamp::create([
             'nama' => $request->nama,
             'icon_path' => $iconPath,
+            'icon_stamp_path' => $iconPathStamp,
             'x' => $request->x ?? 0,
             'y' => $request->y ?? 0,
             'type' => $request->type,
@@ -114,6 +120,7 @@ class GameStampController extends Controller
         $request->validate([
             'nama'                   => 'required|string|max:255',
             'icon_path'              => 'nullable|image|mimes:png,jpg,jpeg,svg',
+            'icon_stamp_path'              => 'nullable|image|mimes:png,jpg,jpeg,svg',
             'questions.*.question_text'         => 'required|string',
             'questions.*.thumbnail_path'        => 'nullable|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
@@ -129,6 +136,16 @@ class GameStampController extends Controller
             $iconName = Str::random(10) . '.' . $iconFile->getClientOriginalExtension();
             $iconPath = $iconFile->storeAs('game/icons', $iconName, 'public');
             $gameStamp->icon_path = $iconPath;
+        }
+
+        if ($request->hasFile('icon_stamp_path')) {
+            if ($gameStamp->icon_stamp_path && Storage::disk('public')->exists($gameStamp->icon_stamp_path)) {
+                Storage::disk('public')->delete($gameStamp->icon_stamp_path);
+            }
+            $iconFileStamp = $request->file('icon_stamp_path');
+            $iconNameStamp = Str::random(10) . '.' . $iconFileStamp->getClientOriginalExtension();
+            $iconPathStamp = $iconFileStamp->storeAs('game/icons', $iconNameStamp, 'public');
+            $gameStamp->icon_stamp_path = $iconPathStamp;
         }
 
         $gameStamp->deskripsi = $request->deskripsi;

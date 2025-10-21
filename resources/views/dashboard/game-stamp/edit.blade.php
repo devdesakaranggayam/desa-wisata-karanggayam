@@ -20,11 +20,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="icon_path" class="form-label">Icon</label><br>
+                        <label for="icon_path" class="form-label">Icon Map</label><br>
                         @if($gameStamp->icon_path)
                             <img src="{{ asset('storage/'.$gameStamp->icon_path) }}" alt="icon" height="60" class="mb-2 d-block">
                         @endif
                         <input type="file" name="icon_path" class="form-control" accept="image/*">
+                        <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="icon_path" class="form-label">Icon Stamp</label><br>
+                        @if($gameStamp->icon_stamp_path)
+                            <img src="{{ asset('storage/'.$gameStamp->icon_stamp_path) }}" alt="icon" height="60" class="mb-2 d-block">
+                        @endif
+                        <input type="file" name="icon_stamp_path" class="form-control" accept="image/*">
                         <small class="text-muted">Kosongkan jika tidak ingin mengganti</small>
                     </div>
 

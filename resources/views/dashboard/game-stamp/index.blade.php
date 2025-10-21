@@ -18,7 +18,8 @@
                     <tr>
                         <th>No</th>
                         <th>Nama</th>
-                        <th>Icon</th>
+                        <th>Icon Map</th>
+                        <th>Icon Stamp</th>
                         <th>Jenis</th>
                         <th>Skor Minimum</th>
                         <th>Koordinat</th>
@@ -33,6 +34,13 @@
                         <td>
                             @if($s->icon_path)
                                 <img src="{{ asset('storage/'.$s->icon_path) }}" alt="icon" width="40" height="40">
+                            @else
+                                <span class="badge bg-secondary">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($s->icon_stamp_path)
+                                <img src="{{ asset('storage/'.$s->icon_stamp_path) }}" alt="icon" width="40" height="40">
                             @else
                                 <span class="badge bg-secondary">-</span>
                             @endif
