@@ -14,14 +14,16 @@ class ArObject extends Model
     protected $guarded = ['id'];
     public $incrementing = false;  // non-auto increment
 
+    protected $appends = ['audio_url', 'object_url'];
+
     public function getAudioUrlAttribute()
     {
-        return asset('storage/models/' . $this->audio_path);
+        return asset('storage/' . $this->audio_path);
     }
 
-    public function get3dUrlAttribute()
+    public function getObjectUrlAttribute()
     {
-        return asset('storage/models/' . $this->{'3d_path'});
+        return asset('storage/' . $this->{'3d_path'});
     }
 
     protected static function boot()

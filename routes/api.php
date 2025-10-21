@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\TokoController;
@@ -9,11 +11,10 @@ use App\Http\Controllers\API\HadiahController;
 use App\Http\Controllers\API\ProdukController;
 use App\Http\Controllers\API\SearchController;
 use App\Http\Controllers\API\WisataController;
+
+use App\Http\Controllers\API\ArObjectController;
 use App\Http\Controllers\API\KesenianController;
 use App\Http\Controllers\API\GameStampController;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 Route::get('/models/{filename}', function ($filename) {
     $path = public_path('storage/models/' . $filename);
@@ -55,6 +56,7 @@ Route::get('explore/detail', [SearchController::class, 'detail'])->name('api.sea
 Route::get('home', [HomeController::class, 'index']);
 
 Route::get('wisata/{id}', [WisataController::class, 'show'])->name('api.wisata.show');
+Route::get('3d-objects', [ArObjectController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth.api')->group(function () {
