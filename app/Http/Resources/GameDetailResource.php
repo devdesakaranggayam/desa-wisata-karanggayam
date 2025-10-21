@@ -36,6 +36,7 @@ class GameDetailResource extends JsonResource
             "type" => $this->type,
             "min_correct_answer" => $this->passing_score,
             "icon_url" => $this->icon_url,
+            'icon_stamp_url' => $this->icon_stamp_url,
             "questions" => $questions,
             "foto" => $files
         ];

@@ -68,9 +68,6 @@ class User extends Authenticatable implements JWTSubject
             return asset('img/user.png');
         }
 
-        // Ambil base URL dari APP_URL .env
-        $baseUrl = config('app.url');
-
-        return $baseUrl . Storage::url($this->profile_pic);
+        return asset('storage' . '/' . $this->profile_pic);
     }
 }

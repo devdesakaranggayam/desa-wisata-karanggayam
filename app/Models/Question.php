@@ -30,9 +30,6 @@ class Question extends Model
         if (!$this->thumbnail_path) {
             return null;
         }
-
-        // Ambil base URL dari APP_URL .env
-        $baseUrl = config('app.url');
-        return $baseUrl . Storage::url($this->thumbnail_path);
+        return asset('storage' . '/' . $this->thumbnail_path);
     }
 }

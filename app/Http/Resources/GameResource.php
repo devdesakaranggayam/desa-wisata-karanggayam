@@ -18,6 +18,7 @@ class GameResource extends JsonResource
             'id' => $this->id,
             'nama' => $this->nama,
             'icon_url' => $this->icon_url,
+            'icon_stamp_url' => $this->icon_stamp_url,
             'x' => $this->x,
             'y' => $this->y,
             'type' => $this->type,

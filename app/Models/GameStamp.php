@@ -18,7 +18,7 @@ class GameStamp extends Model
     }
 
     // accessor untuk file_url
-    protected $appends = ['icon_url'];
+    protected $appends = ['icon_url', 'icon_stamp_url'];
 
     public function getIconUrlAttribute()
     {
@@ -26,9 +26,16 @@ class GameStamp extends Model
             return null;
         }
 
-        // Ambil base URL dari APP_URL .env
-        $baseUrl = config('app.url');
-        return $baseUrl . \Storage::url($this->icon_path);
+        return asset('storage' . '/' . $this->icon_path);
+    }
+
+    public function getIconStampUrlAttribute()
+    {
+        if (!$this->icon_stamp_path) {
+            return asset('storage' . '/' . $this->icon_path);
+        }
+
+        return asset('storage' . '/' . $this->icon_stamp_path);
     }
 
     public function files()

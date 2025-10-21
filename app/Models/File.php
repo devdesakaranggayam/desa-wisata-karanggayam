@@ -25,10 +25,7 @@ class File extends Model
             return null;
         }
 
-        // Ambil base URL dari APP_URL .env
-        $baseUrl = config('app.url');
-
-        return $baseUrl . Storage::url($this->path);
+        return asset('storage' . '/' . $this->path);
     }
 
     public function produk()
