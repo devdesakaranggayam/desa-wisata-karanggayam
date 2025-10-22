@@ -30,7 +30,7 @@ Route::get('/models/{filename}', function ($filename) {
         'Content-Type' => $mime,
         'Access-Control-Allow-Origin' => '*', // penting untuk Flutter web
     ]);
-});
+})->name('api.model.show');
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);

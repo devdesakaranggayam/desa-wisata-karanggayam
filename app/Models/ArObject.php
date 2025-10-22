@@ -23,7 +23,8 @@ class ArObject extends Model
 
     public function getObjectUrlAttribute()
     {
-        return asset('storage/' . $this->{'3d_path'});
+        $cleanFilename = str_replace("models/", "", $this->{'3d_path'});
+        return route('api.model.show', $cleanFilename);
     }
 
     protected static function boot()
