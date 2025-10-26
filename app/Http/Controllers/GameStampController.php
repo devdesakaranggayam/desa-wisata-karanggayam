@@ -38,7 +38,7 @@ class GameStampController extends Controller
             'icon_path'              => 'required|image|mimes:png,jpg,jpeg,svg',
             'icon_stamp_path'              => 'required|image|mimes:png,jpg,jpeg,svg',
             'questions.*.question_text'         => 'required|string',
-            'questions.*.thumbnail_path'        => 'required|image|mimes:png,jpg,jpeg',
+            // 'questions.*.thumbnail_path'        => 'required|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
             'questions.*.answers.*.is_correct'  => 'nullable|boolean',
         ]);
@@ -122,7 +122,7 @@ class GameStampController extends Controller
             'icon_path'              => 'nullable|image|mimes:png,jpg,jpeg,svg',
             'icon_stamp_path'              => 'nullable|image|mimes:png,jpg,jpeg,svg',
             'questions.*.question_text'         => 'required|string',
-            'questions.*.thumbnail_path'        => 'nullable|image|mimes:png,jpg,jpeg',
+            // 'questions.*.thumbnail_path'        => 'nullable|image|mimes:png,jpg,jpeg',
             'questions.*.answers.*.answer_text' => 'required|string',
             'questions.*.answers.*.is_correct'  => 'nullable|boolean',
         ]);
