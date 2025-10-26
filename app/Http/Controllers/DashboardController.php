@@ -6,6 +6,7 @@ use App\Models\Toko;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Produk;
+use App\Models\Wisata;
 use App\Models\Kesenian;
 use Illuminate\Http\Request;
 
@@ -15,16 +16,16 @@ class DashboardController extends Controller
     {
         $tokoCount = Toko::count();
         $produkCount = Produk::count();
-        $kesenianCount = Kesenian::count();
+        $kesenianCount = Wisata::count();
         $userCount = User::count();
         $adminCount = Admin::count();
 
         // Statistik kesenian
-        $kesenianDates = Kesenian::selectRaw('DATE(created_at) as date')
+        $kesenianDates = Wisata::selectRaw('DATE(created_at) as date')
             ->groupBy('date')
             ->orderBy('date')
             ->pluck('date');
-        $kesenianCounts = Kesenian::selectRaw('COUNT(*) as count, DATE(created_at) as date')
+        $kesenianCounts = Wisata::selectRaw('COUNT(*) as count, DATE(created_at) as date')
             ->groupBy('date')
             ->orderBy('date')
             ->pluck('count');

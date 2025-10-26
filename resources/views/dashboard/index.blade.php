@@ -21,10 +21,10 @@
                 <!-- Statistik Kesenian -->
                 <div class="col-md-3">
                     <div class="card text-white bg-info mb-3">
-                        <div class="card-header">Jumlah Kesenian</div>
+                        <div class="card-header">Jumlah Kesenian & Wisata</div>
                         <div class="card-body">
                             <h5 class="card-title">{{ $kesenianCount }}</h5>
-                            <p class="card-text">Kesenian terdaftar</p>
+                            <p class="card-text">Kesenian & wisata terdaftar</p>
                         </div>
                     </div>
                 </div>  
@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-6 col-12">
                     <div class="mt-4">
-                        <h5>Statistik Kesenian</h5>
+                        <h5>Statistik Kesenian & Wisata</h5>
                         <canvas id="kesenianChart"></canvas>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
             data: {
                 labels: @json($kesenianDates),
                 datasets: [{
-                    label: 'Jumlah Kesenian',
+                    label: 'Jumlah Kesenian & Wisata',
                     data: @json($kesenianCounts),
                     borderColor: 'rgba(54, 162, 235, 1)',
                     tension: 0.1
