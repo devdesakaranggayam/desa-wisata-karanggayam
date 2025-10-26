@@ -125,7 +125,7 @@
                     <div class="mb-3">
                         <label class="form-label">Thumbnail Pertanyaan</label>
                         <input type="file" name="questions[${questionIndex}][thumbnail_path]" 
-                            class="form-control" accept="image/*" required>
+                            class="form-control" accept="image/*">
                     </div>
 
                     <h6>Jawaban</h6>

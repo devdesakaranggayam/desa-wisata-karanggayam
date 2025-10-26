@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('game_stamp_id');
             $table->text('question_text');
-            $table->text('thumbnail_path');
+            $table->text('thumbnail_path')->nullable();
             $table->timestamps();
         });
     }
