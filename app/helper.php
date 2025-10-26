@@ -456,3 +456,24 @@ if (! function_exists('get_user_reward')) {
         });
     }
 }
+
+if (! function_exists('normalize_rupiah')) {
+    /**
+     * Normalize string berformat rupiah (misal "1.250.000") ke float/integer.
+     *
+     * @param  string|null  $value
+     * @return float|null
+     */
+    function normalize_rupiah($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        // Hapus semua karakter non-digit
+        $clean = preg_replace('/[^0-9]/', '', $value);
+
+        // Return sebagai float atau int
+        return $clean === '' ? null : (float) $clean;
+    }
+}

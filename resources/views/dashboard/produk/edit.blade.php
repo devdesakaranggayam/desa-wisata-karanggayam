@@ -21,8 +21,8 @@
     
             <div class="mb-3">
                 <label for="harga" class="form-label">Harga</label>
-                <input type="number" step="0.01" class="form-control" id="harga" name="harga" 
-                       value="{{ old('harga', $produk->harga) }}" required>
+                <input type="text" class="form-control rupiah" id="harga" name="harga" value="{{ old('harga', number_format($produk->harga ?? 0, 0, ',', '.')) }}" required>
+
             </div>
     
             <div class="mb-3">

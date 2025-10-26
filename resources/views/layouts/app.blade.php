@@ -147,8 +147,11 @@
     @include('dashboard.shared.script')
     
     @stack('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
+      $('.rupiah').mask('000.000.000.000', {reverse: true});
+      
       $('body').on('click', '#generatePassword', (e)=>{
         const pwd = randomString()
         $('#password').val(pwd)

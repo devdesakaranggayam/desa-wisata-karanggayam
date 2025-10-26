@@ -28,7 +28,7 @@
 
             <div class="mb-3">
                 <label for="harga" class="form-label">Harga</label>
-                <input type="number" step="0.01" class="form-control" id="harga" name="harga" required>
+                <input type="text" class="form-control rupiah" id="harga" name="harga" required>
             </div>
 
             <div class="mb-3">

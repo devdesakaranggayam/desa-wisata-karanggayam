@@ -26,12 +26,15 @@ class ProdukController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'harga' => 'required|numeric',
+            'harga' => 'required',
             'deskripsi' => 'nullable|string',
             'toko_id' => 'required|exists:toko,id',
         ]);
 
-        $produk = Produk::create($request->only(['nama', 'harga', 'deskripsi', 'toko_id']));
+        $data = $request->only(['nama', 'harga', 'deskripsi', 'toko_id']);
+        $data['harga'] = normalize_rupiah($request->harga);
+        $produk = Produk::create($data);
+
 
         if ($request->has('files')) {
             foreach ($request->input('files') as $index => $fileInput) {
@@ -68,7 +71,12 @@ class ProdukController extends Controller
     {
 
         $produk = Produk::findOrFail($id);
-        $produk->update($request->only(['nama', 'harga', 'deskripsi', 'toko_id']));
+
+        $data = $request->only(['nama', 'harga', 'deskripsi', 'toko_id']);
+        $data['harga'] = normalize_rupiah($request->harga);
+
+        
+        $produk->update($data);
 
         if ($request->has('files')) {
             foreach ($request->input('files') as $index => $fileInput) {
