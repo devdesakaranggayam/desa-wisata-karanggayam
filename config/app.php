@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'max_upload_size' => env('MAX_UPLOAD_SIZE', '6 MB'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

@@ -38,6 +38,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Tambah File</label>
+                <small class="text-muted d-block my-1">Maksimal {{config('app.max_upload_size')}}</small>
                 <div id="file-wrapper">
                     <div class="file-group mb-3 row">
                         <div class="col-md-4">

@@ -54,6 +54,8 @@
 
                     <div class="mb-3">
                     <label class="form-label">Tambah File</label>
+                    <small class="text-muted d-block my-1">Maksimal {{config('app.max_upload_size')}}</small>
+
                     <div id="file-wrapper">
                         <div class="file-group mb-3 row">
                             <div class="col-md-4">
@@ -70,7 +72,7 @@
                     <button type="button" id="add-file" class="btn btn-success btn-sm">
                         <i class="fa fa-plus"></i> Tambah File
                     </button>
-                    <small class="text-muted d-block mt-2">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
+                    <small class="text-muted d-block my-1">File baru akan ditambahkan, file lama tidak otomatis terhapus.</small>
                 </div>
 
                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
