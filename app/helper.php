@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Config;
 use App\Models\Hadiah;
 use App\Models\Produk;
 use App\Models\Wisata;
@@ -475,5 +476,16 @@ if (! function_exists('normalize_rupiah')) {
 
         // Return sebagai float atau int
         return $clean === '' ? null : (float) $clean;
+    }
+}
+
+if (! function_exists('config_value')) {
+    function config_value($key)
+    {
+        if (is_null($key)) {
+            return null;
+        }
+
+        return Config::where('key', $key)->first()->value ?? null;
     }
 }

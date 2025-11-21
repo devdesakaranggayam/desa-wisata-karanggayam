@@ -184,5 +184,16 @@
                 <div data-i18n="Kesenian">Hadiah</div>
             </a>
         </li>
+        <li class="menu-item 
+            {{is_active_sidebar([
+                'configs.index',
+            ])}}"
+        >
+            <a href="{{route('configs.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons fa-solid fa-cog"></i>
+
+                <div data-i18n="Kesenian">Pengaturan</div>
+            </a>
+        </li>
     </ul>
 </aside>

@@ -9,9 +9,10 @@ use App\Http\Controllers\API\TokoController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\HadiahController;
 use App\Http\Controllers\API\ProdukController;
+use App\Http\Controllers\API\RadiusController;
 use App\Http\Controllers\API\SearchController;
-use App\Http\Controllers\API\WisataController;
 
+use App\Http\Controllers\API\WisataController;
 use App\Http\Controllers\API\ArObjectController;
 use App\Http\Controllers\API\KesenianController;
 use App\Http\Controllers\API\GameStampController;
@@ -57,6 +58,7 @@ Route::get('home', [HomeController::class, 'index']);
 
 Route::get('wisata/{id}', [WisataController::class, 'show'])->name('api.wisata.show');
 Route::get('3d-objects', [ArObjectController::class, 'index']);
+Route::get('radius/check', [RadiusController::class, 'checkRadius']);
 
 // Protected routes
 Route::middleware('auth.api')->group(function () {

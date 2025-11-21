@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\HadiahController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\WisataController;
@@ -33,6 +34,9 @@ Route::prefix('dashboard')->group(function () {
         Route::get('arobject/{id}/qr', [ArObjectController::class, 'showQr'])->name('arobject.qr');
         Route::resource('arobject', ArObjectController::class)->except([]);
 
+        Route::get('configs', [ConfigController::class, 'index'])->name('configs.index');
+        Route::post('/configs/update', [ConfigController::class, 'update'])->name('configs.update');
+        
         Route::get('index', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('wisata', WisataController::class);
         Route::resource('kesenian', KesenianController::class);
