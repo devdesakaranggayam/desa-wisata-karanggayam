@@ -62,6 +62,8 @@ Route::get('3d-objects', [ArObjectController::class, 'index']);
 Route::get('radius/check', [RadiusController::class, 'checkRadius']);
 
 // Protected routes
+Route::get('sertifikat/cek', [CertificateController::class, 'cek']);
+
 Route::middleware('auth.api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('profile', [AuthController::class, 'me']);

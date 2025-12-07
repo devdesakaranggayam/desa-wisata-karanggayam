@@ -82,4 +82,11 @@ class CertificateController extends Controller
         return response($encoded->toString(), 200)
             ->header('Content-Type', $encoded->mediaType());
     }
+
+    public function cek()
+    {
+        return response()->json([
+            'show' => true
+        ], 200);
+    }
 }
