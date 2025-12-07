@@ -62,8 +62,6 @@ Route::get('3d-objects', [ArObjectController::class, 'index']);
 Route::get('radius/check', [RadiusController::class, 'checkRadius']);
 
 // Protected routes
-Route::get('sertifikat/cek', [CertificateController::class, 'cek']);
-
 Route::middleware('auth.api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('profile', [AuthController::class, 'me']);
@@ -86,5 +84,6 @@ Route::middleware('auth.api')->group(function () {
     Route::post('image-check', [GameStampController::class, 'checkGapuraImage']);
 
     Route::get('sertifikat', [CertificateController::class, 'index']);
+    Route::get('sertifikat/popup', [CertificateController::class, 'popup']);
     Route::get('sertifikat/{sertifikat}', [CertificateController::class, 'generate']);
 });

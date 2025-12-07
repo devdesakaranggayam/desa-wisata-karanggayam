@@ -83,7 +83,7 @@ class CertificateController extends Controller
             ->header('Content-Type', $encoded->mediaType());
     }
 
-    public function cek()
+    public function popup()
     {
         return response()->json([
             'show' => true
