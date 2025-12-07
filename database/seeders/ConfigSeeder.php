@@ -29,6 +29,11 @@ class ConfigSeeder extends Seeder
                 'value' => '10',
                 'desc' => 'Jumlah minimal stamp untuk mendapat sertifikat'
             ],
+            [
+                'key' => 'app_version',
+                'value' => '1.0.1',
+                'desc' => 'Versi aplikasi'
+            ],
         ]);
 
     }
