@@ -65,7 +65,7 @@ class GameStampController extends Controller
 
         $minStamp = intval(config_value('min_stamp_sertifikat'));
 
-        if ($userStampCount > $minStamp) {
+        if ($userStampCount >= $minStamp) {
 
             $sudahAdaHariIni = Sertifikat::where('user_id', $user->id)
                 ->whereDate('tanggal', today())
