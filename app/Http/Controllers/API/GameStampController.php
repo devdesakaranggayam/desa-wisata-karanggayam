@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use Carbon\Carbon;
+use App\Models\Config;
 use App\Models\GameStamp;
 use App\Models\UserStamp;
+use App\Models\Sertifikat;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -59,6 +61,24 @@ class GameStampController extends Controller
         ]);
 
         $data = get_user_stamp($user->id);
+        $userStampCount = $data["stamp_count"]["user_stamp"] ?? 0;
+
+        $minStamp = intval(config_value('min_stamp_sertifikat'));
+
+        if ($userStampCount > $minStamp) {
+
+            $sudahAdaHariIni = Sertifikat::where('user_id', $user->id)
+                ->whereDate('tanggal', today())
+                ->exists();
+
+            if (!$sudahAdaHariIni) {
+                Sertifikat::create([
+                    'user_id' => $user->id,
+                    'tanggal' => now(),
+                ]);
+            }
+        }
+
 
         return ApiResponse::success($data, 'Stamp berhasil ditambahkan');
     }

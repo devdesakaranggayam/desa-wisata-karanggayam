@@ -24,6 +24,11 @@ class ConfigSeeder extends Seeder
                 'value' => '10',
                 'desc' => 'Jarak radius maksimum (dalam kilometer) yang menentukan apakah pengguna berada di dalam area yang diizinkan untuk bermain game stamp.'
             ],
+            [
+                'key' => 'min_stamp_sertifikat',
+                'value' => '10',
+                'desc' => 'Jumlah minimal stamp untuk mendapat sertifikat'
+            ],
         ]);
 
     }

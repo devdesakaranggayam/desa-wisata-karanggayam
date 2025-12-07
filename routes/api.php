@@ -16,6 +16,7 @@ use App\Http\Controllers\API\WisataController;
 use App\Http\Controllers\API\ArObjectController;
 use App\Http\Controllers\API\KesenianController;
 use App\Http\Controllers\API\GameStampController;
+use App\Http\Controllers\API\CertificateController;
 
 Route::get('/models/{filename}', function ($filename) {
     $path = public_path('storage/models/' . $filename);
@@ -81,4 +82,7 @@ Route::middleware('auth.api')->group(function () {
     Route::get('hadiah', [HadiahController::class, 'userHadiah']);
     Route::post('hadiah/klaim', [HadiahController::class, 'klaimHadiah']);
     Route::post('image-check', [GameStampController::class, 'checkGapuraImage']);
+
+    Route::get('sertifikat', [CertificateController::class, 'index']);
+    Route::get('sertifikat/{sertifikat}', [CertificateController::class, 'generate']);
 });
