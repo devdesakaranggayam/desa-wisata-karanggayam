@@ -43,7 +43,7 @@ class HomeController extends Controller
             "produk_banner" => ProdukBannerResource::collection($bannerProduk->files),
             "explore" => ExploreResource::collection($sorted),
             "produk" => ProdukResource::collection($randomProduk),
-            
+            "app_version" => config_value('app_version')
         ];
 
         return ApiResponse::success($data);
