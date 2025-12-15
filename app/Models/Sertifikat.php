@@ -8,6 +8,9 @@ class Sertifikat extends Model
 {
     protected $guarded = ['id'];
     protected $table = 'sertifikat';
+    protected $casts = [
+        'show' => 'boolean',
+    ];
 
     public function user()
     {

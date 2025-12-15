@@ -50,13 +50,13 @@ class CertificateController extends Controller
         //     $font->valign('middle');
         // });
 
-        // $img->text($text4, $x, 1225, function ($font) use ($geist) {
-        //     $font->filename(public_path($geist)); 
-        //     $font->size(45);
-        //     $font->color('#717680');
-        //     $font->align('center'); 
-        //     $font->valign('middle');
-        // });
+        $img->text($tanggal, 720, 1225, function ($font) use ($geist) {
+            $font->filename(public_path($geist)); 
+            $font->size(45);
+            $font->color('#000');
+            $font->align('center'); 
+            $font->valign('middle');
+        });
 
         return $img->encodeByExtension('png');
     }
@@ -85,8 +85,22 @@ class CertificateController extends Controller
 
     public function popup()
     {
-        return response()->json([
-            'show' => true
-        ], 200);
+        $sertifikat = Sertifikat::where('user_id', auth('api')->user()->id)
+            ->where('show', true)
+            ->latest()
+            ->first();
+            
+        if ($sertifikat) {
+            $sertifikat->update(['show' => false]);
+            return response()->json([
+                'show' => true,
+                'id' => $sertifikat->id
+            ], 200);
+        } else {
+            return response()->json([
+                'show' => false,
+                'id' => null
+            ], 200);
+        }
     }
 }
