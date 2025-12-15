@@ -89,17 +89,17 @@ class CertificateController extends Controller
             ->where('show', true)
             ->latest()
             ->first();
-            
+
         if ($sertifikat) {
             $sertifikat->update(['show' => false]);
             return response()->json([
                 'show' => true,
-                'id' => $sertifikat->id
+                'certificate_id' => $sertifikat->id
             ], 200);
         } else {
             return response()->json([
                 'show' => false,
-                'id' => null
+                'certificate_id' => null
             ], 200);
         }
     }
